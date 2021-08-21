@@ -30,6 +30,14 @@ $ node index.js
 ```
 This will run the bot locally on your machine which will connect to any guilds you've set it to connect to within [Discord's Developer Portal](http://discordapp.com/developers/applications) for the bot. (See: [How to Make a Discord Bot in the Developer Portal](https://realpython.com/how-to-make-a-discord-bot-python/#how-to-make-a-discord-bot-in-the-developer-portal))
 
+## Registering Slash (/) Commands
+```bash
+$ node registerSlashCommands.js
+```
+Running this will register all slash commands under `/commands` to the guilds (servers) who have IDs within the `guildIDs` array within the `registerSlashCommands.js` file.
+
+Slash commands are only included in DiscordJS v13.x.x or higher. For more information on slash (/) commands and registering them see [Discord's documentation](https://discordjs.guide/interactions/registering-slash-commands.html#guild-commands).
+
 ---
 
 ### ideas/todo

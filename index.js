@@ -1,5 +1,8 @@
 require('dotenv').config();
-const { Client, Intents } = require('discord.js');
+
+const fs = require('fs');
+const { Client, Intents, Collection } = require('discord.js');
+
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
   // Intents.FLAGS.GUILD_MEMBERS,
@@ -17,14 +20,46 @@ const client = new Client({ intents: [
   // Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
   // Intents.FLAGS.DIRECT_MESSAGE_TYPING
 ]});
+client.commands = new Collection();
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.data.name, command);
+}
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
+client.on('interactionCreate', async interaction => {
+  // only look at slash commands
+	if (!interaction.isCommand()) return;
+
+  const { commandName } = interaction;
+	if (!client.commands.has(commandName)) return;
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await client.commands.get(commandName).execute(interaction);
+	} catch (error) {
+		console.error(error);
+		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+  }
+});
+
 client.on('messageCreate', message => {
-  if (message.content === 'ping') {
-    message.channel.send('pong');
+  if (message.content.charAt(0) !== '!') return;
+
+  const splitMsg = message.content.split(' ');
+  const command = splitMsg.shift().substring(1);
+
+  if (command === 'echo') {
+    message.channel.send(splitMsg.join(' '));
   }
 });
 
