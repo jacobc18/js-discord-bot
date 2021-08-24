@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
+const speakText = require('./utils/speakText');
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -11,7 +12,7 @@ const client = new Client({ intents: [
   // Intents.FLAGS.GUILD_INTEGRATIONS,
   // Intents.FLAGS.GUILD_WEBHOOKS,
   // Intents.FLAGS.GUILD_INVITES,
-  // Intents.FLAGS.GUILD_VOICE_STATES,
+  Intents.FLAGS.GUILD_VOICE_STATES,
   // Intents.FLAGS.GUILD_PRESENCES,
   Intents.FLAGS.GUILD_MESSAGES,
   // Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
@@ -74,6 +75,21 @@ client.on('messageCreate', message => {
   if (command === 'echo') {
     message.channel.send(splitMsg.join(' '));
   }
+});
+
+client.on('voiceStateUpdate', function(oldState, newState){
+  if (newState.id === process.env.CLIENT_ID) return;
+
+  if (oldState.channelId === newState.channelId) return;
+
+  const channelId = newState.channelId;
+  if (!channelId) return;
+
+  const memberId = newState.id;
+  const member = newState.guild.members.cache.get(memberId);
+  
+  const channel = client.channels.cache.get(channelId);
+  speakText(channel, `hello, ${member.nickname || member.user.username || ''}`);
 });
 
 client.login(process.env.DISCORD_TOKEN);
