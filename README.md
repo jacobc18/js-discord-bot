@@ -19,6 +19,7 @@ $ npm install
 Create a file within the repo folder name `.env` with content:
 ```.env
 DISCORD_TOKEN={your-discord-bot-token}
+CLIENT_ID={your-discord-client-id}
 ```
 
 Replace `'{your-discord-bot-token}'` with your Discord bot token
