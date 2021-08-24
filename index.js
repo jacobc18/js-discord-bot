@@ -34,13 +34,26 @@ client.on('ready', () => {
 });
 
 client.on('interactionCreate', async interaction => {
-  // only look at slash commands
-	if (!interaction.isCommand()) return;
+  const isButtonInteraction = interaction.isButton();
 
-  const { commandName } = interaction;
+	if (!interaction.isCommand() && !isButtonInteraction) return;
+
+  let { commandName } = interaction;
+
+  if (isButtonInteraction) {
+    const splitButtonCustomId = interaction.customId.split('cmd:');
+    if (splitButtonCustomId.length > 1) {
+      commandName = splitButtonCustomId[1];
+    } else {
+
+      // handle non-command button interactions here
+      return;
+    }
+  }
+  
 	if (!client.commands.has(commandName)) return;
 
-	const command = client.commands.get(interaction.commandName);
+	const command = client.commands.get(commandName);
 
 	if (!command) return;
 
