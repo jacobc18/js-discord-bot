@@ -89,7 +89,7 @@ client.on('voiceStateUpdate', function(oldState, newState){
   const member = newState.guild.members.cache.get(memberId);
   
   const channel = client.channels.cache.get(channelId);
-  speakText(channel, `hello, ${member.nickname || member.user.username || ''}`);
+  speakText(channel, `hello ${member.nickname || member.user.username || ''}`);
 });
 
 client.login(process.env.DISCORD_TOKEN);

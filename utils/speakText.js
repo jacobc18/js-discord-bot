@@ -45,7 +45,7 @@ module.exports = async function speakText(voiceChannel, text) {
     }
     const timestamp = new Date().getTime();
     const soundPath = `./temp/${timestamp}.mp3`;
-    await say.export(text, null, 1, soundPath);
+    await say.export(text, 'Microsoft Zira Desktop', 1, soundPath);
     
     const connection = await connectToChannel(voiceChannel);
 
