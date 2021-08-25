@@ -45,26 +45,26 @@ module.exports = async function speakText(voiceChannel, text) {
     }
     const timestamp = new Date().getTime();
     const soundPath = `./temp/${timestamp}.mp3`;
-    await say.export(text, 'Microsoft Zira Desktop', 1, soundPath);
-    
-    const connection = await connectToChannel(voiceChannel);
+    say.export(text, 'Microsoft Zira Desktop', 1, soundPath, async() => {
+        const connection = await connectToChannel(voiceChannel);
 
-    const player = createAudioPlayer({
-        behaviors: {
-            noSubscriber: NoSubscriberBehavior.Pause,
-        },
+        const player = createAudioPlayer({
+            behaviors: {
+                noSubscriber: NoSubscriberBehavior.Pause,
+            },
+        });
+
+        player.on(AudioPlayerStatus.Idle, () => {
+            player.stop();
+            connection.destroy();
+            fs.unlinkSync(soundPath);
+        });
+
+        try {
+            await playAudioFile(player, soundPath);
+            connection.subscribe(player);
+        } catch (err) {
+            console.error(err);
+        }
     });
-
-    player.on(AudioPlayerStatus.Idle, () => {
-        player.stop();
-        connection.destroy();
-        fs.unlinkSync(soundPath);
-    });
-
-    try {
-        await playAudioFile(player, soundPath);
-        connection.subscribe(player);
-    } catch (err) {
-        console.error(err);
-    }
 }
