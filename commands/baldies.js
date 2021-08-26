@@ -34,5 +34,5 @@ module.exports = {
             content: `https://en.wikipedia.org/w/index.php?search=${randomBaldy.replaceAll(' ', '+')}`,
             components: [row]
         });
-	},
+	}
 };
