@@ -13,6 +13,8 @@ module.exports = function(client, oldState, newState) {
     const memberId = newState.id;
     const member = newState.guild.members.cache.get(memberId);
 
+    if (member.user.bot) return;
+
     const greetingsObj = greetingsData[memberId] || greetingsData.default;
     const memberGreetings = greetingsObj.greetings;
 
