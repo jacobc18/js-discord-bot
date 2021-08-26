@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const speakText = require('./utils/speakText');
+const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -77,19 +77,8 @@ client.on('messageCreate', message => {
   }
 });
 
-client.on('voiceStateUpdate', function(oldState, newState){
-  if (newState.id === process.env.CLIENT_ID) return;
-
-  if (oldState.channelId === newState.channelId) return;
-
-  const channelId = newState.channelId;
-  if (!channelId) return;
-
-  const memberId = newState.id;
-  const member = newState.guild.members.cache.get(memberId);
-  
-  const channel = client.channels.cache.get(channelId);
-  speakText(channel, `hello ${member.nickname || member.user.username || ''}`);
+client.on('voiceStateUpdate', (oldState, newState) => {
+  voiceStateUpdateHandler(client, oldState, newState);
 });
 
 client.login(process.env.DISCORD_TOKEN);
