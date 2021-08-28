@@ -42,6 +42,7 @@ Slash commands are only included in DiscordJS v13.x.x or higher. For more inform
 ---
 
 ### ideas/todo
+From previous Python bot ->
 1. accrue tokens with activity
 2. distribute tokens person to person
 3. records log of every bet and distribution of tokens
@@ -56,3 +57,9 @@ Slash commands are only included in DiscordJS v13.x.x or higher. For more inform
 12. quotes
 13. ask for quote of specific user
 14. after for random or numbered quote
+
+From after creation of this bot ->
+1. consolidate audio and voice connect related code within `utils/connectAndPlayAudioFile.js` and `utils/speakText`
+2. set up music bot capabilites with queueing, pausing, stopping, etc. 
+    - potentially take all music bot code and put into a separate bot so as to avoid voice-overlap. alternatively, have the bot not do anything voice related while playing audio/music.
+3. set audio recording capabilities

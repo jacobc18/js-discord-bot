@@ -13,6 +13,8 @@ const {
 } =  require('@discordjs/voice');
 const createDiscordJSAdapter = require('./adapter');
 
+const TTS_AUDIO_DIR_PATH = './temp';
+
 async function connectToChannel(channel) {
 	const connection = joinVoiceChannel({
 		channelId: channel.id,
@@ -40,11 +42,11 @@ function playAudioFile(player, filePath) {
 }
 
 module.exports = async function speakText(voiceChannel, text) {
-    if (!fs.existsSync('./temp')){
-        fs.mkdirSync('./temp');
+    if (!fs.existsSync(TTS_AUDIO_DIR_PATH)){
+        fs.mkdirSync(TTS_AUDIO_DIR_PATH);
     }
     const timestamp = new Date().getTime();
-    const soundPath = `./temp/${timestamp}.mp3`;
+    const soundPath = `${TTS_AUDIO_DIR_PATH}/${timestamp}.mp3`;
     say.export(text, 'Microsoft Zira Desktop', 1, soundPath, async() => {
         const connection = await connectToChannel(voiceChannel);
 
@@ -57,7 +59,7 @@ module.exports = async function speakText(voiceChannel, text) {
         player.on(AudioPlayerStatus.Idle, () => {
             player.stop();
             connection.destroy();
-            fs.unlinkSync(soundPath);
+            fs.rmSync(TTS_AUDIO_DIR_PATH, { recursive: true })
         });
 
         try {
