@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const readFile = require('../utils/readFile');
 const getRandomBetween = require('../utils/getRandomBetween');
+const logger = require('../utils/logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,6 +30,8 @@ module.exports = {
         });
 
         const randomBaldy = baldies[getRandomBetween(0, baldies.length - 1)];
+
+        logger.log(`/BALDIES user: ${interaction.member.user.username}`);
 
 		await interaction.reply({
             content: `https://en.wikipedia.org/w/index.php?search=${randomBaldy.replaceAll(' ', '+')}`,

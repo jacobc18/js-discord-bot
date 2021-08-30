@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const speakText = require('../utils/speakText');
+const logger = require('../utils/logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,6 +21,8 @@ module.exports = {
 
         const userText = interaction.options.getString('text');
 
+        logger.log(`/SPEAK user: ${interaction.member.user.username} | channel: ${channel} | ${userText}`);
+        
         speakText(channel, userText);
         await interaction.reply('success');
         await interaction.deleteReply();

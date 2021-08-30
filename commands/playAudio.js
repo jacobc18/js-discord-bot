@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
+const logger = require('../utils/logger');
 
 const AUDIOFILES_DIR_PATH = './data/audioFiles';
 
@@ -29,8 +30,11 @@ module.exports = {
         }
 
         const channel = interaction.guild.channels.cache.get(channelId);
+        const fullFilePath = `${AUDIOFILES_DIR_PATH}/${fileName}`;
 
-        connectAndPlayAudioFile(channel, `${AUDIOFILES_DIR_PATH}/${fileName}`);
+        logger.log(`/PLAYAUDIO user: ${interaction.member.user.username} | channel: ${channel} | ${fullFilePath}`);
+
+        connectAndPlayAudioFile(channel, fullFilePath);
         await interaction.reply(`successfully played audio file: ${fileName}`);
         // todo: delay this deletion
         // await interaction.deleteReply();

@@ -1,6 +1,7 @@
 const greetingsData = require('../data/greetings.json');
 const speakText = require('../utils/speakText');
 const getRandomBetween = require('../utils/getRandomBetween');
+const logger = require('../utils/logger');
 
 module.exports = function(client, oldState, newState) {
     if (newState.id === process.env.CLIENT_ID) return;
@@ -23,5 +24,8 @@ module.exports = function(client, oldState, newState) {
         .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
     
     const channel = client.channels.cache.get(channelId);
+
+    logger.log(`GREET user: ${member.user.username} | channel: ${channel} | ${randomMemberGreeting}`);
+    
     speakText(channel, randomMemberGreeting);
 };
