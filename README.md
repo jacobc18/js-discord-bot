@@ -63,3 +63,5 @@ From after creation of this bot ->
 2. set up music bot capabilites with queueing, pausing, stopping, etc. 
     - potentially take all music bot code and put into a separate bot so as to avoid voice-overlap. alternatively, have the bot not do anything voice related while playing audio/music.
 3. set audio recording capabilities
+4. add constants.js with constant definitions
+5. change /playaudio and /listaudio to /audio play and /audio list subcommands

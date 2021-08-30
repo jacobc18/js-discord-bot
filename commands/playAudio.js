@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
 
@@ -16,14 +17,22 @@ module.exports = {
 
         if (!channelId) {
             await interaction.reply('You must first join a voice channel');
+            return;
+        }
+
+        const audioFileNames = fs.readdirSync(AUDIOFILES_DIR_PATH);
+        const fileName = interaction.options.getString('filename');
+
+        if (!audioFileNames.includes(fileName)) {
+            await interaction.reply(`Could not find an audio file named: ${fileName}.\nTry using /listaudio to get a list of available audio files.`);
+            return;
         }
 
         const channel = interaction.guild.channels.cache.get(channelId);
 
-        // const fileName = interaction.options.getString('filename');
-
-        connectAndPlayAudioFile(channel, `${AUDIOFILES_DIR_PATH}/trees_man.mp3`);
-        await interaction.reply('success');
-        await interaction.deleteReply();
+        connectAndPlayAudioFile(channel, `${AUDIOFILES_DIR_PATH}/${fileName}`);
+        await interaction.reply(`successfully played audio file: ${fileName}`);
+        // todo: delay this deletion
+        // await interaction.deleteReply();
 	}
 };
