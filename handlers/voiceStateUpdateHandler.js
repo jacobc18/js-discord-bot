@@ -32,8 +32,8 @@ module.exports = function(client, oldState, newState) {
 
     if (sixtyNinersMemberData) {
         const timestamp = new Date().getTime();
-        const oneDay = 86400000;
-        if (timestamp - sixtyNinersMemberData.timestamp >= oneDay && getRandomBetween(1, 69) === 69) {
+        const sevenAndAHalfHours = 27000000; // 6 hours and 90 minutes
+        if (timestamp - sixtyNinersMemberData.timestamp >= sevenAndAHalfHours && getRandomBetween(1, 69) === 69) {
             // member hit the rare greeting!
             randomMemberGreeting = '*NAME* has earned the right to 69 with me'
                 .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
