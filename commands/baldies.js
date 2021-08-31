@@ -22,6 +22,7 @@ module.exports = {
                 content: 'The bald boy who inspired them all, Haden Brock, <@617533047482351626>: https://www.facebook.com/haden.brock \n https://imgur.com/a/Vrzbx7W',
                 components: [row]
             });
+            return;
         }
 
         const baldies = [];

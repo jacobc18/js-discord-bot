@@ -1,3 +1,4 @@
+const fs = require('fs');
 const greetingsData = require('../data/greetings.json');
 const speakText = require('../utils/speakText');
 const getRandomBetween = require('../utils/getRandomBetween');
@@ -19,11 +20,39 @@ module.exports = function(client, oldState, newState) {
     const greetingsObj = greetingsData[memberId] || greetingsData.default;
     const memberGreetings = greetingsObj.greetings;
 
-    const randomMemberGreeting =
+    let randomMemberGreeting =
         memberGreetings[getRandomBetween(0, memberGreetings.length - 1)]
         .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
     
     const channel = client.channels.cache.get(channelId);
+
+    // handle rare greeting
+    const sixtyNinersData = require('../data/69ers.json');
+    const sixtyNinersMemberData = sixtyNinersData[memberId];
+
+    if (sixtyNinersMemberData) {
+        const timestamp = new Date().getTime();
+        const oneDay = 86400000;
+        if (timestamp - sixtyNinersMemberData.timestamp >= oneDay && getRandomBetween(1, 69) === 69) {
+            // member hit the rare greeting!
+            randomMemberGreeting = '*NAME* has earned the right to 69 with me'
+                .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
+            if (sixtyNinersMemberData.earned > 0) {
+                randomMemberGreeting += ` ${sixtyNinersMemberData.earned + 1} times`;
+            }
+            sixtyNinersData[memberId] = {
+                timestamp,
+                earned: sixtyNinersMemberData.earned + 1
+            }
+            fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
+        }
+    } else {
+        sixtyNinersData[memberId] = {
+            timestamp: new Date().getTime(),
+            earned: 0
+        }
+        fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
+    }
 
     logger.log(`GREET user: ${member.user.username} | channel: ${channel} | ${randomMemberGreeting}`);
     

@@ -1,9 +1,8 @@
 {
     "default": {
         "greetings": [
-            "hello *NAME* what's it like to be a huge piece of shit",
             "welcome *NAME* to the voice channel",
-            "*NAME* has joined the chat. Certified bimbus and ignorant in regards to Pastrami",
+            "*NAME* has joined the chat. Certified bimbus and ignorant in regards to the identity of Pastrami",
             "*NAME* has arrived with an order of Ching Chong Chicken",
             "This is *NAME*. Psych This is Norman Todd"
         ]
@@ -12,7 +11,8 @@
         "greetings": [
             "The member who joined thinks Discord is a Sandwich",
             "I am not equal to negative one that Steve is a bimbus",
-            "Someone has broken out of bad boy jail" 
+            "Someone has broken out of bad boy jail",
+            "look whose back from finally finding those car keys"
         ]
     },
     "189080695824580609": {
@@ -23,7 +23,8 @@
     },
     "189181051216592896": {
         "greetings": [
-            "ew, it smells like wee wee bref"
+            "ew, it smells like wee wee bref",
+            "somebody hide the sheep"
         ]
     },
     "227250823938310144": {
@@ -33,7 +34,8 @@
     },
     "213840072494022666": {
         "greetings": [
-            "Jay FEPs resident furry is here, hide your wittle fuwwy fwends uwu"
+            "Jay FEP's resident furry is here, hide your wittle fuwwy fwends ooh woo",
+            "a non-potato sexual has joined"
         ]
     },
     "692234789532598313": {
@@ -43,13 +45,14 @@
     },
     "672168198023413770": {
         "greetings": [
-            "waygan has entered the channel"
+            "waygan has arrived to give or receive felatio, preferably give"
         ]
     },
     "404146142360764436": {
         "greetings": [
             "Nut up Fuck face, *NAME* is here",
-            "the only rocket league silver in JFEP has arrived"
+            "the only rocket league silver in JFEP has arrived",
+            "naa dude. it's dookie time"
         ]
     },
     "148979092681785346": {
@@ -64,7 +67,8 @@
     },
     "190201674537631744": {
         "greetings": [
-            "cookies are bread" 
+            "cookies are bread",
+            "I am pleased to announce the arrival of Carlos Alejandro ghee yen man of love"
         ]
     },
     "189957667203186688": {
@@ -74,7 +78,13 @@
     },
     "328609379958128642": {
         "greetings": [
-            "say hello to The Neighborhood's number 1 piece of shit"
+            "say hello to The Neighborhood's number 1 patron"
+        ]
+    },
+    "247176943970025473": {
+        "greetings": [
+            "mowchi monsta in the house!",
+            "mowchi. is not mowchi monsta"
         ]
     }
 }
