@@ -11,7 +11,8 @@ const { Routes } = require('discord-api-types/v9');
 
 const guildIDs = [
     '845049398283075604', // JeekDevServer
-    '189901212232056832' // Jake Feeds Poros
+    '189901212232056832', // Jake Feeds Poros
+    '206912393601613825', // low-res friends
 ];
 
 const commands = [];
