@@ -2,7 +2,10 @@ const fs = require('fs');
 const greetingsData = require('../data/greetings.json');
 const speakText = require('../utils/speakText');
 const getRandomBetween = require('../utils/getRandomBetween');
+const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
 const logger = require('../utils/logger');
+
+const AUDIOFILES_DIR_PATH = './data/audioFiles';
 
 module.exports = function(client, oldState, newState) {
     if (newState.id === process.env.CLIENT_ID) return;
@@ -55,6 +58,12 @@ module.exports = function(client, oldState, newState) {
     }
 
     logger.log(`GREET user: ${member.user.username} | channel: ${channel} | ${randomMemberGreeting}`);
+
+    if (randomMemberGreeting.includes('*AUDIOFILE*')) {
+        const audioFileName = randomMemberGreeting.split('*AUDIOFILE*')[1];
+        connectAndPlayAudioFile(channel, `${AUDIOFILES_DIR_PATH}/${audioFileName}`);
+        return;
+    }
     
     speakText(channel, randomMemberGreeting);
 };
