@@ -6,6 +6,7 @@ const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
 const logger = require('../utils/logger');
 
 const AUDIOFILES_DIR_PATH = './data/audioFiles';
+const JFEP_GUILD_ID = '189901212232056832';
 
 module.exports = function(client, oldState, newState) {
     if (newState.id === process.env.CLIENT_ID) return;
@@ -20,7 +21,9 @@ module.exports = function(client, oldState, newState) {
 
     if (member.user.bot) return;
 
-    const greetingsObj = greetingsData[memberId] || greetingsData.default;
+    const defaultGreeting = newState.guild.id === JFEP_GUILD_ID ? greetingsData.jfepDefault : greetingsData.default;
+
+    const greetingsObj = greetingsData[memberId] || defaultGreeting;
     const memberGreetings = greetingsObj.greetings;
 
     let randomMemberGreeting =
