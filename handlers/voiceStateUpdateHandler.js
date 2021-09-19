@@ -21,6 +21,11 @@ module.exports = function(client, oldState, newState) {
 
     if (member.user.bot) return;
 
+    // don't greet someone if the musicPlayer is playing
+    let player = client.musicPlayerManager.get(newState.guild.id);
+
+    if (player && player.nowPlaying) return;
+
     const defaultGreeting = newState.guild.id === JFEP_GUILD_ID ? greetingsData.jfepDefault : greetingsData.default;
 
     const greetingsObj = greetingsData[memberId] || defaultGreeting;
@@ -60,7 +65,7 @@ module.exports = function(client, oldState, newState) {
         fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
     }
 
-    logger.log(`GREET user: ${member.user.username} | channel: ${channel} | ${randomMemberGreeting}`);
+    logger.log(`GREET user: ${member.user.username} | channel: ${member.voice.channel.name} | ${randomMemberGreeting}`);
 
     if (randomMemberGreeting.includes('*AUDIOFILE*')) {
         const audioFileName = randomMemberGreeting.split('*AUDIOFILE*')[1];

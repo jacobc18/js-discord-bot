@@ -30,6 +30,11 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+client.once('ready', () => {
+ client.musicPlayerManager = new Map();
+ client.guildData = new Collection();
+});
+
 client.on('ready', () => {
   // client.user.setUsername('Pastrami');
   console.log(`Logged in as ${client.user.tag}!`);
@@ -79,7 +84,11 @@ client.on('messageCreate', message => {
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-  voiceStateUpdateHandler(client, oldState, newState);
+  try {
+    voiceStateUpdateHandler(client, oldState, newState);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 client.login(process.env.DISCORD_TOKEN);

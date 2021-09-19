@@ -1,0 +1,7 @@
+{
+    "playLiveStreams": false,
+    "maxQueueLength": 100,
+    "leaveTimeout": 90,
+    "maxResponseTime": 30,
+    "maxVideoPLayLengthMinutes": 60
+}

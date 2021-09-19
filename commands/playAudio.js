@@ -8,7 +8,7 @@ const AUDIOFILES_DIR_PATH = './data/audioFiles';
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('playaudio')
-		.setDescription('join the voice channel you\'re in play audio file name given')
+		.setDescription('join the voice channel you\'re in and play audio file name given')
         .addStringOption(option =>
             option.setName('filename')
                 .setDescription('file to be played')
@@ -32,7 +32,7 @@ module.exports = {
         const channel = interaction.guild.channels.cache.get(channelId);
         const fullFilePath = `${AUDIOFILES_DIR_PATH}/${fileName}`;
 
-        logger.log(`/PLAYAUDIO user: ${interaction.member.user.username} | channel: ${channel} | ${fullFilePath}`);
+        logger.log(`/PLAYAUDIO user: ${interaction.member.user.username} | channel: ${interaction.member.voice.channel.name} | ${fullFilePath}`);
 
         connectAndPlayAudioFile(channel, fullFilePath);
         await interaction.reply(`successfully played audio file: ${fileName}`);

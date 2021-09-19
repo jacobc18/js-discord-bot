@@ -21,7 +21,7 @@ module.exports = {
 
         const userText = interaction.options.getString('text');
 
-        logger.log(`/SPEAK user: ${interaction.member.user.username} | channel: ${channel} | ${userText}`);
+        logger.log(`/SPEAK user: ${interaction.member.user.username} | channel: ${interaction.member.voice.channel.name} | ${userText}`);
         
         speakText(channel, userText);
         await interaction.reply('success');
