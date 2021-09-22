@@ -58,7 +58,7 @@ To start the bot locally on your machine run
 $ node index.js
 ```
 
-This will also connect the bot to any guilds you have linked it to via [Discord's Developer Portal](http://discordapp.com/developers/applications)
+This will also connect the bot to any guilds you have linked it to via [Discord's Developer Portal](http://discordapp.com/developers/applications).
 
 **Greetings**
 
