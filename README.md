@@ -23,7 +23,7 @@ Requires [NodeJS v16.x.x](https://nodejs.org/en/) or higher and the latest versi
 $ windows_setup.bat
 ```
 
-#### Manual
+### Manual
 
 In package directory run:
 
@@ -50,7 +50,7 @@ If you want to utilize Pastrami's audio streaming capabilities for non YouTube c
 
 ## Usage
 
-#### Startup 
+### Startup 
 
 To start the bot locally on your machine run
 
@@ -60,7 +60,7 @@ $ node index.js
 
 This will also connect the bot to any guilds you have linked it to via [Discord's Developer Portal](http://discordapp.com/developers/applications).
 
-#### Greetings
+### Greetings
 
 To customize greetings navigate to ``` /data/greetings.json```. 
 
@@ -107,7 +107,7 @@ Again, this is pretty similar to the previous greeting formats. However, for use
 
 (Note: Greetings within the same grouping will be used randomly with equal probability)
 
-#### Slash Commands
+### Slash Commands
 
 Pastrami bot offers a handful of slash commands. You can use these by typing the command into a text channel on any guild where Pastrami is active.
 
