@@ -17,7 +17,7 @@ Pastrami is a multifunctional JavaScript Discord bot with abilities including:
 
 Requires [NodeJS v16.x.x](https://nodejs.org/en/) or higher and the latest version of [NPM](https://docs.npmjs.com/cli/v7/commands/npm-install)
 
-#### Windows
+### Windows
 
 ```
 $ windows_setup.bat
