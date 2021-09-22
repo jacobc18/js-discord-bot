@@ -59,7 +59,7 @@ module.exports = async function speakText(voiceChannel, text) {
         player.on(AudioPlayerStatus.Idle, () => {
             player.stop();
             connection.destroy();
-            if (!fs.existsSync(TTS_AUDIO_DIR_PATH)){
+            if (fs.existsSync(TTS_AUDIO_DIR_PATH)) {
                 fs.rmSync(TTS_AUDIO_DIR_PATH, { recursive: true })
             }
         });

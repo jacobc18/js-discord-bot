@@ -1,3 +1,4 @@
+require('dotenv').config();
 
 const log = data => {
     if (!process.env.LOGGING) return;
