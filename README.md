@@ -19,7 +19,7 @@ Requires [NodeJS v16.x.x](https://nodejs.org/en/) or higher and the latest versi
 
 **Windows**
 
-```bash
+```
 $ windows_setup.bat
 ```
 
@@ -27,7 +27,7 @@ $ windows_setup.bat
 
 In package directory run:
 
-```bash
+```
 $ npm install
 ```
 
@@ -35,7 +35,7 @@ $ npm install
 
 In the repo folder create a file called ``` .env ``` with the contents:
 
-```powershell
+```
 DISCORD_TOKEN=your-discord-bot-token-goes-here
 CLIENT_ID=your-discord-client-id-goes-here
 ```
@@ -54,7 +54,7 @@ If you want to utilize Pastrami's audio streaming capabilities for non YouTube c
 
 To start the bot locally on your machine run
 
-```powershell
+```
 $ node index.js
 ```
 
@@ -111,31 +111,31 @@ Again, this is pretty similar to the previous greeting formats. However, for use
 
 Pastrami bot offers a handful of slash commands. You can use these by typing the command into a text channel on any guild where Pastrami is active.
 
-```powershell
+```
 /baldies
 ```
 
 This command will post a wiki link to a random famous person who is currently bald or was bald at any point in their adult life. 
 
-```powershell
+```
 /listaudio
 ```
 
 This command will list any audio files that are available to be played by Pastrami. The audio files listed will be pulled from the ``` /data/audiofiles``` folder mentioned earlier.
 
-```powershell
+```
 /playaudio name-of-audio-file
 ```
 
 This command will add Pastrami to the voice channel and play the audio file specified in the command. (Note: the audio file must be stored in ``` /data/audiofiles```)
 
-```powershell
+```
 /speak your-text-string-goes-here
 ```
 
 This command will add Pastrami to the voice channel and play a TTS reading of the text string specified in the command.
 
-```powershell
+```
 /yt youtube-url-goes-here
 ```
 
