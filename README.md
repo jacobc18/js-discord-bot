@@ -2,7 +2,7 @@
 
 [![GitHub issues](https://img.shields.io/github/issues/jacobc18/js-discord-bot)](https://github.com/jacobc18/js-discord-bot/issues)
 
-<img align="left" src="https://media.giphy.com/media/3ornk57KwDXf81rjWM/giphy.gif">
+!("https://media.giphy.com/media/3ornk57KwDXf81rjWM/giphy.gif")
 
 
 
