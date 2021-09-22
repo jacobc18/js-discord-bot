@@ -4,6 +4,9 @@
 
 <img align="left" src="https://media.giphy.com/media/3ornk57KwDXf81rjWM/giphy.gif">
 
+
+
+
 Pastrami is a multifunctional JavaScript Discord bot with abilities including:
 
 - TTS greetings for voice channel user join
