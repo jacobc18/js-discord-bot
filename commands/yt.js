@@ -85,7 +85,7 @@ module.exports = {
             timestamp = Number(timestamp);
 
             const video = await youtube.getVideoByID(id).catch(function() {
-                deleteMusicPlayer(interaction);
+                deleteMusicPlayerIfNeeded(interaction);
                 interaction.followUp(
                     ':x: There was a problem getting the video you provided'
                 );
@@ -93,7 +93,7 @@ module.exports = {
             if (!video) return;
 
             if (video.raw.snippet.liveBroadcastContent === 'live' && !playLiveStreams) {
-                deleteMusicPlayer(interaction);
+                deleteMusicPlayerIfNeeded(interaction);
                 interaction.followUp(
                     'Live streams are disabled in this server'
                 );
@@ -101,7 +101,7 @@ module.exports = {
             }
 
             if ((video.duration.days * 1440) + (video.duration.hours * 60) + video.duration.minutes > maxVideoPLayLengthMinutes) {
-                deleteMusicPlayer(interaction);
+                deleteMusicPlayerIfNeeded(interaction);
                 interaction.followUp(
                     `Videos longer than ${maxVideoPLayLengthMinutes} minutes are disabled`
                 );
@@ -165,7 +165,7 @@ const handleSubscription = async (queue, interaction, player) => {
     try {
         await entersState(player.connection, VoiceConnectionStatus.Ready, 10000);
     } catch (err) {
-        deleteMusicPlayer(interaction);
+        deleteMusicPlayerIfNeeded(interaction);
         console.error(err);
         await interaction.followUp({ content: 'Failed to join your channel' });
 
@@ -211,7 +211,7 @@ const constructSongObj = (video, voiceChannel, user, timestamp) => {
     };
 };
 
-const deleteMusicPlayer = interaction => {
+const deleteMusicPlayerIfNeeded = interaction => {
     const player = interaction.client.musicPlayerManager.get(interaction.guildId);
     if (player) {
         if (

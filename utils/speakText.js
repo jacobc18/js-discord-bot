@@ -66,6 +66,11 @@ module.exports = async function speakText(voiceChannel, text) {
             await playAudioFile(player, soundPath);
             connection.subscribe(player);
         } catch (err) {
+            player.stop();
+            connection.destroy();
+            if (fs.existsSync(TTS_AUDIO_DIR_PATH)) {
+                fs.rmSync(TTS_AUDIO_DIR_PATH, { recursive: true })
+            }
             console.error(err);
         }
     });
