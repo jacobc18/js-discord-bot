@@ -19,7 +19,7 @@ Requires [NodeJS v16.x.x](https://nodejs.org/en/) or higher and the latest versi
 
 **Windows**
 
-```powershell
+```bash
 $ windows_setup.bat
 ```
 
@@ -27,7 +27,7 @@ $ windows_setup.bat
 
 In package directory run:
 
-```powershell
+```bash
 $ npm install
 ```
 
