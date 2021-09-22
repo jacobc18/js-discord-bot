@@ -7,7 +7,7 @@
 
 
 
-Pastrami is a multifunctional JavaScript Discord bot with abilities including:
+Pastrami is a multifunctional JavaScript Discord bot with abilities including
 
 - TTS greetings for voice channel user join
 - Audio streaming via YouTube links 
@@ -25,7 +25,7 @@ $ windows_setup.bat
 
 ### Manual
 
-In package directory run:
+In package directory run
 
 ```
 $ npm install
@@ -33,7 +33,7 @@ $ npm install
 
 ## Setup
 
-In the repo folder create a file called ``` .env ``` with the contents:
+In the repo folder create a file called ``` .env ``` with the contents
 
 ```
 DISCORD_TOKEN=your-discord-bot-token-goes-here
