@@ -6,15 +6,13 @@ const {
     AudioPlayerStatus,
 	VoiceConnectionStatus,
     StreamType,
-    NoSubscriberBehavior,
 } =  require('@discordjs/voice');
-const createDiscordJSAdapter = require('./adapter');
 
 async function connectToChannel(channel) {
 	const connection = joinVoiceChannel({
 		channelId: channel.id,
 		guildId: channel.guild.id,
-		adapterCreator: createDiscordJSAdapter(channel),
+		adapterCreator: channel.guild.voiceAdapterCreator
 	});
 
 	try {
@@ -39,11 +37,7 @@ function playAudioFile(player, filePath) {
 module.exports = async function connectAndPlayAudioFile(voiceChannel, filePath) {
     const connection = await connectToChannel(voiceChannel);
 
-    const player = createAudioPlayer({
-        behaviors: {
-            noSubscriber: NoSubscriberBehavior.Pause,
-        },
-    });
+    const player = createAudioPlayer();
 
     player.on(AudioPlayerStatus.Idle, () => {
         player.stop();
