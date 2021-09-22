@@ -40,7 +40,7 @@ DISCORD_TOKEN=your-discord-bot-token-goes-here
 CLIENT_ID=your-discord-client-id-goes-here
 ```
 
-To get a Discord bot token and Discord client ID see [How to Make a Discord Bot in the Developer Portal](https://realpython.com/how-to-make-a-discord-bot-python/#how-to-make-a-discord-bot-in-the-developer-portal)
+To get a Discord bot token and Discord client ID see [How to Make a Discord Bot in the Developer Portal](https://realpython.com/how-to-make-a-discord-bot-python/#how-to-make-a-discord-bot-in-the-developer-portal).
 
 We utilize [say.js](https://github.com/Marak/say.js) to convert text strings to mp3 files. Say.js uses some [FFMpeg](https://www.ffmpeg.org/) libraries to operate, so you will need to install the most up to date version. You can learn how to do that [here](https://www.wikihow.com/Install-FFmpeg-on-Windows). 
 
