@@ -48,7 +48,7 @@ To get a Discord bot token and Discord client ID see [How to Make a Discord Bot 
 
 ### Setting up Audio 
 
-Pastrami uses [say.js](https://github.com/Marak/say.js) to convert text strings to mp3 files. Say.js uses some [FFMpeg](https://www.ffmpeg.org/) libraries to operate, so you will need to install the most up to date version. You can learn how to do that [here](https://www.wikihow.com/Install-FFmpeg-on-Windows). 
+Pastrami uses [say.js](https://github.com/Marak/say.js) to convert text strings to mp3 files, and say.js uses some [FFMpeg](https://www.ffmpeg.org/) libraries to operate. You will need to install the most up to date version of FFMpeg. You can learn how to do that [here](https://www.wikihow.com/Install-FFmpeg-on-Windows). 
 
 (Note: say.js uses [Festival](https://www.cstr.ed.ac.uk/projects/festival/) to operate on Linux, so check their [README](https://github.com/Marak/say.js/blob/master/README.md) to get that squared away)
 
