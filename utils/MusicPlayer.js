@@ -154,6 +154,7 @@ const {
         const stream = ytdl(song.url, {
           filter: 'audio',
           quality: 'highestaudio',
+          dlChunkSize: 0,
           highWaterMark: 1 << 25
         });
         const resource = createAudioResource(stream, {

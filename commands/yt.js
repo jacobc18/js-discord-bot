@@ -8,7 +8,6 @@ const {
 } =  require('@discordjs/voice');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Youtube = require('simple-youtube-api');
-const ytdl = require('ytdl-core');
 const MusicPlayer = require('../utils/MusicPlayer');
 const createGuildData = require('../utils/createGuildData');
 const {
