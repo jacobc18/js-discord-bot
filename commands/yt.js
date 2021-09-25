@@ -48,6 +48,8 @@ module.exports = {
             return;
         }
 
+        let logStringAdditions = '';
+
         const query = interaction.options.getString('query');
 
         let player = interaction.client.musicPlayerManager.get(interaction.guildId);
@@ -124,16 +126,19 @@ module.exports = {
             );
 
             if (player.audioPlayer.state.status !== AudioPlayerStatus.Playing) {
+                // first video in queue
                 handleSubscription(player.queue, interaction, player);
-                // return;
+            } else {
+                // video was added to queue
+                await interaction.reply(`Enqueued ${video.title}`);
             }
 
-            // return;
+            logStringAdditions += ` | video.title: ${video.title}`;
         } else {
             await interaction.reply('invalid query format');
         }
 
-        logger.log(`/YT user: ${interaction.member.user.username} | channel: ${voiceChannel.name} | ${query}`);
+        logger.log(`/YT user: ${interaction.member.user.username} | channel: ${voiceChannel.name} | ${query}${logStringAdditions}`);
     }
 };
 
@@ -171,7 +176,7 @@ const handleSubscription = async (queue, interaction, player) => {
         return;
     }
     player.process(player.queue);
-    await interaction.reply(`Enqueued ${title}`);
+    await interaction.reply(`Now playing ${title}`);
 };
 
 // returns 'HH:MM:SS' or if HH is missing returns MM:SS
