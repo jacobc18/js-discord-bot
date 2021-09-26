@@ -75,13 +75,13 @@ client.on('interactionCreate', async interaction => {
 client.on('messageCreate', async message => {
   if (message.content.charAt(0) !== '!') return;
 
-  const splitMsg = message.content.split(' ');
-  const command = splitMsg.shift().substring(1);
+  const splitArgs = message.content.split(' ');
+  const command = splitArgs.shift().substring(1);
 
   if (client.commands.has(command)) {
-    await client.commands.get(command).execute(message);
+    await client.commands.get(command).execute(message, splitArgs);
   } else if (command === 'echo') {
-    message.channel.send(splitMsg.join(' '));
+    message.channel.send(splitArgs.join(' '));
   }
 });
 

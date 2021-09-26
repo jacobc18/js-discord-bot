@@ -1,4 +1,3 @@
-const speakText = require('../utils/speakText');
 const logger = require('../utils/logger');
 
 module.exports = {
