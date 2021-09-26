@@ -33,11 +33,8 @@ module.exports = {
                 .setDescription('url')
                 .setRequired(true)),
     async execute(interaction) {
-        // await interaction.reply('command is currently disabled');
-        // return;
-
         if (!interaction.client.guildData.get(interaction.guildId)) {
-            interaction.client.guildData.set(interaction.guildId, createGuildData());
+            interaction.client.guildData.set(interaction.guildId, createGuildData(interaction.guildId));
         }
 
         const channelId = interaction.member.voice.channelId;

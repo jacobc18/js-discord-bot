@@ -1,15 +1,8 @@
 {
-    "default": {
+    "189181051216592896": {
         "greetings": [
-            "welcome *NAME*"
-        ]
-    },
-    "jfepDefault": {
-        "greetings": [
-            "welcome *NAME* to the voice channel",
-            "*NAME* has joined the chat. Certified bimbus and ignorant in regards to the identity of Pastrami",
-            "*NAME* has arrived with an order of Ching Chong Chicken",
-            "This is *NAME*. Psych This is Norman Todd"
+            "ew, it smells like wee wee bref",
+            "somebody hide the sheep"
         ]
     },
     "190098635969658881": {
@@ -25,12 +18,6 @@
         "greetings": [
             "Looks like we have a post september 9th 2021 legend in our midst",
             "twitch dot tv slash not a legend prior to september 9th 2021"
-        ]
-    },
-    "189181051216592896": {
-        "greetings": [
-            "ew, it smells like wee wee bref",
-            "somebody hide the sheep"
         ]
     },
     "227250823938310144": {

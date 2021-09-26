@@ -1,12 +1,12 @@
 const fs = require('fs');
-const greetingsData = require('../data/greetings.json');
+const userData = require('../data/userData.json');
 const speakText = require('../utils/speakText');
 const getRandomBetween = require('../utils/getRandomBetween');
 const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
+const createGuildData = require('../utils/createGuildData');
 const logger = require('../utils/logger');
 
 const AUDIOFILES_DIR_PATH = './data/audioFiles';
-const JFEP_GUILD_ID = '189901212232056832';
 
 module.exports = function(client, oldState, newState) {
     if (newState.id === process.env.CLIENT_ID) return;
@@ -25,11 +25,17 @@ module.exports = function(client, oldState, newState) {
     let player = client.musicPlayerManager.get(newState.guild.id);
 
     if (player && player.nowPlaying) return;
+    
+    const memberData = userData[memberId];
 
-    const defaultGreeting = newState.guild.id === JFEP_GUILD_ID ? greetingsData.jfepDefault : greetingsData.default;
+    if (!client.guildData.get(newState.guild.id)) {
+        client.guildData.set(newState.guild.id, createGuildData(newState.guild.id));
+    }
 
-    const greetingsObj = greetingsData[memberId] || defaultGreeting;
-    const memberGreetings = greetingsObj.greetings;
+    const guildData = client.guildData.get(newState.guild.id);
+    const defaultGreetings = guildData.greetings;
+
+    const memberGreetings = memberData?.greetings || defaultGreetings;
 
     let randomMemberGreeting =
         memberGreetings[getRandomBetween(0, memberGreetings.length - 1)]

@@ -91,24 +91,37 @@ This will also connect the bot to any guilds you have linked it to via [Discord'
 
 ### Greetings
 
-To customize greetings navigate to ``` /data/greetings.json```. 
+- User Specific Greetings 
 
-- Default Greetings
+To customize user specific greetings navigate to ``` /data/userData.json```. 
 
 ```json
-"default": {
+"xxxx": {
+        ...,
         "greetings": [
             "welcome *NAME*",
-            "say hi to *NAME*"
+            "this is a custom greeting for *NAME*"
         ]
     },
 ```
 
-In ``` greetings.json```  the \*NAME\* variable is used to reference the server nickname of the user who has joined the voice channel. 
+The \*NAME\* string is used to reference the server nickname of the user who has joined the voice channel. You need to replace ``` xxxx``` with that user's unique identifier.
 
-<!--
+- Default Greetings 
 
-- Guild Default Greetings 
+To customize default greetings for guilds that do not have guild specific default greetings set, navigate to ``` /utils/createGuildData.js``` and edit the `defaultGuildGreetings` array:
+
+```js
+const defaultGuildGreetings = [
+    'welcome *NAME*'
+];
+```
+
+- Guild Specific Default Greetings 
+
+You can set default greetings for a specific guild. This requires the unique guild identifier ( ``` xxxx``` ) to function. 
+
+Navigate to ``` /config/guild.json```:
 
 ```json
 "xxxx": {
@@ -118,23 +131,6 @@ In ``` greetings.json```  the \*NAME\* variable is used to reference the server 
         ]
     },
 ```
-
-This is pretty much the same as the default greetings, but it requires the unique guild identifier ( ``` xxxx``` ) to function. 
-
--->
-
-- User Specific Greetings
-
-```json
-"xxxx": {
-        "greetings": [
-            "Malachi is cool",
-            "Everyone likes Malachi"
-        ]
-    },
-```
-
-Again, this is pretty similar to the previous greeting formats. However, for user specific greetings you need to replace ``` xxxx``` with that user's unique identifier. 
 
 *To find the unique identifiers for guilds and users check [this](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-) out.*
 
