@@ -22,7 +22,7 @@ module.exports = {
                 { name: '/listaudio', value: 'lists any audio files that are available to be played by Pastrami'},
                 { name: '/playaudio *fileName*', value: 'adds Pastrami to the voice channel and play the audio *filename* specified in the command'},
                 { name: '/speak *text*', value: 'adds Pastrami to the voice channel and play a TTS reading of given *text*'},
-                { name: '/yt *query*', value: 'adds Pastrami to the voice channel and plays the audio corresponding to the YouTube link provided (queries WIP)' }
+                { name: '/yt *url*', value: 'adds Pastrami to the voice channel and plays the audio corresponding to the YouTube URL provided (queries WIP)' }
             )
 
         logger.log(`/PASTRAMI user: ${interaction.member.user.username} | guildId: ${guildId}`);
