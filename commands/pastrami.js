@@ -16,14 +16,13 @@ module.exports = {
             // .setDescription('Some description here')
             .addFields(
                 // { name: '\u200B', value: '\u200B' }, blank field
-                { name: '!echo', value: 'repeats back given query' },
+                { name: '!echo *query*', value: 'repeats back given *query*' },
                 { name: '!leave', value: 'forces Pastrami to leave a voice channel if in one' },
                 { name: '/baldies', value: 'will post a wiki link to a random famous person who is currently bald or was bald at any point in their adult life' },
                 { name: '/listaudio', value: 'lists any audio files that are available to be played by Pastrami'},
-                { name: '/playaudio', value: 'adds Pastrami to the voice channel and play the audio file specified in the command'},
-                { name: '/speak', value: 'lists any audio files that are available to be played by Pastrami'},
-                { name: '/speak', value: 'adds Pastrami to the voice channel and play a TTS reading of given text'},
-                { name: '/yt', value: 'adds Pastrami to the voice channel and plays the audio corresponding to the YouTube link provided' }
+                { name: '/playaudio *fileName*', value: 'adds Pastrami to the voice channel and play the audio *filename* specified in the command'},
+                { name: '/speak *text*', value: 'adds Pastrami to the voice channel and play a TTS reading of given *text*'},
+                { name: '/yt *query*', value: 'adds Pastrami to the voice channel and plays the audio corresponding to the YouTube link provided (queries WIP)' }
             )
 
         logger.log(`/PASTRAMI user: ${interaction.member.user.username} | guildId: ${guildId}`);
