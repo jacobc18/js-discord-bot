@@ -110,10 +110,10 @@ To customize user specific greetings navigate to ``` /data/userData.json```.
 
 ```json
 "xxxx": {
-        ...,
         "greetings": [
             "welcome *NAME*",
-            "this is a custom greeting for *NAME*"
+            "this is a custom greeting for *NAME*",
+            "Malachi is cool"
         ]
     },
 ```
