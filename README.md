@@ -42,13 +42,26 @@ In the repo folder create a file called ``` .env ``` with the contents
 ```
 DISCORD_TOKEN=your-discord-bot-token-goes-here
 CLIENT_ID=your-discord-client-id-goes-here
+YOUTUBE_API_KEY=your-youtube-api-key-goes-here
 ```
 
 To get a Discord bot token and Discord client ID see [How to Make a Discord Bot in the Developer Portal](https://realpython.com/how-to-make-a-discord-bot-python/#how-to-make-a-discord-bot-in-the-developer-portal).
 
+To get a YouTube API key follow the steps outlined [here](https://developers.google.com/youtube/v3/getting-started).
+
+After following the steps outlined in [How to Make a Discord Bot in the Developer Portal](https://realpython.com/how-to-make-a-discord-bot-python/#how-to-make-a-discord-bot-in-the-developer-portal), you need to invite the bot to the Discord guilds you would like it to operate in. To do this you will need to navigate to your application in the [Discord Developer Portal](https://discord.com/developers/applications) and then to the ``` OAuth2``` tab. 
+
+Here you will need to check the boxes for the ``` applications.command``` and ``` bot``` scopes. Then, you will need to choose which permissions you want the bot to have underneath the scope section. After this is done you should copy the url created by the scopes section and paste it into your browser. Then, choose the guild/guilds where you would like to add the bot.  
+
 ### Setting up Audio 
 
-Pastrami uses [say.js](https://github.com/Marak/say.js) to convert text strings to mp3 files, and say.js uses some [FFMpeg](https://www.ffmpeg.org/) libraries to operate. You will need to install the most up to date version of FFMpeg. You can learn how to do that [here](https://www.wikihow.com/Install-FFmpeg-on-Windows). 
+Pastrami uses [say.js](https://github.com/Marak/say.js) to convert text strings to mp3 files, and say.js uses some [FFMpeg](https://www.ffmpeg.org/) libraries to operate. You will need to install the most up to date version of FFMpeg. To do this, you can run
+
+```
+$ npm install ffmpeg-static
+```
+
+Or follow the guide [here](https://www.wikihow.com/Install-FFmpeg-on-Windows). 
 
 (Note: say.js uses [Festival](https://www.cstr.ed.ac.uk/projects/festival/) to operate on Linux, so check their [README](https://github.com/Marak/say.js/blob/master/README.md) to get that squared away)
 
