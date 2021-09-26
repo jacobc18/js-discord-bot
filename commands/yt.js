@@ -15,7 +15,7 @@ const {
     maxQueueLength,
     // leaveTimeout,
     // maxResponseTime,
-    maxVideoPLayLengthMinutes
+    maxVideoPlayLengthMinutes
 } = require('../config/music.json');
 const logger = require('../utils/logger');
 
@@ -101,10 +101,10 @@ module.exports = {
                 return;
             }
 
-            if ((video.duration.days * 1440) + (video.duration.hours * 60) + video.duration.minutes > maxVideoPLayLengthMinutes) {
+            if ((video.duration.days * 1440) + (video.duration.hours * 60) + video.duration.minutes > maxVideoPlayLengthMinutes) {
                 deleteMusicPlayerIfNeeded(interaction);
                 interaction.followUp(
-                    `Videos longer than ${maxVideoPLayLengthMinutes} minutes are disabled`
+                    `Videos longer than ${maxVideoPlayLengthMinutes} minutes are disabled`
                 );
                 return;
             }
