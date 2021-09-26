@@ -1,4 +1,6 @@
+const fs = require('fs');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const users = require('../data/users.json');
 const logger = require('../utils/logger');
 
 module.exports = {
@@ -56,7 +58,52 @@ module.exports = {
                         .setDescription('name of playlist to delete')
                         .setRequired(true))),
 	async execute(interaction) {
-        logger.log(`/PLAYLIST user: ${interaction.member.user.username} | channel: ${interaction.member.voice.channel.name}`);
+        const subcommandName = interaction.options.getSubcommand().toLowerCase();
+
+        logger.log(`/PLAYLIST ${subcommandName.toUpperCase()} user: ${interaction.member.user.username} | channel: ${interaction.member.voice.channel.name}`);
+
+        if (subcommandName === 'create') {
+            createPlaylist(interaction);
+            return;
+        }
+        
         await interaction.reply('/playlist commands are a work in progress');
 	}
+};
+
+const createPlaylist = async interaction => {
+    const nameInput = interaction.options.getString('name');
+    const userId = interaction.user.id;
+
+    let userData = users[userId];
+
+    if (!userData) {
+        // user has no data whatsoever
+        userData = {
+            playlists: {
+                [nameInput]: []
+            }
+        };
+    } else if (!userData.playlists) {
+        // user has data but no playlists
+        userData = {
+            ...userData,
+            playlists: {
+                [nameInput]: []
+            }
+        };
+    } else if (userData.playlists[nameInput]) {
+        // user already has a playlist with this name
+        await interaction.reply(`you already have a playlist with name ${nameInput}!`);
+        return;
+    } else {
+        // user already has playlists, add this new one
+        userData.playlists[nameInput] = [];
+    }
+
+    // update user data
+    users[userId] = userData;
+    fs.writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
+
+    await interaction.reply(`successfully created playlist named ${nameInput}`);
 };

@@ -106,7 +106,7 @@ This will also connect the bot to any guilds you have linked it to via [Discord'
 
 - User Specific Greetings 
 
-To customize user specific greetings navigate to ``` /data/userData.json```. 
+To customize user specific greetings navigate to ``` /data/users.json```. 
 
 ```json
 "xxxx": {

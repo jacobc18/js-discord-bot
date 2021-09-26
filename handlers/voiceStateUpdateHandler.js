@@ -1,5 +1,5 @@
 const fs = require('fs');
-const userData = require('../data/userData.json');
+const users = require('../data/users.json');
 const speakText = require('../utils/speakText');
 const getRandomBetween = require('../utils/getRandomBetween');
 const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
@@ -26,7 +26,7 @@ module.exports = function(client, oldState, newState) {
 
     if (player && player.nowPlaying) return;
     
-    const memberData = userData[memberId];
+    const memberData = users[memberId];
 
     if (!client.guildData.get(newState.guild.id)) {
         client.guildData.set(newState.guild.id, createGuildData(newState.guild.id));
