@@ -77,6 +77,9 @@ module.exports = {
         } else if (subcommandName === 'add-url') {
             addTrackToPlaylist(interaction);
             return;
+        } else if (subcommandName === 'remove-url') {
+            removeTrackFromPlaylist(interaction);
+            return;
         } else if (subcommandName === 'delete') {
             deletePlaylist(interaction);
             return;
@@ -205,6 +208,40 @@ const addTrackToPlaylist = async interaction => {
     fs.writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
 
     await interaction.reply(`${video.title} successfully added to playlist ${playlistName}${replyStringAdditions}`);
+};
+
+const removeTrackFromPlaylist = async interaction => {
+    const playlistName = interaction.options.getString('playlist').toLowerCase();
+    const playlistNameLowerCase = playlistName.toLowerCase();
+    const index = interaction.options.getInteger('index');
+    const userId = interaction.user.id;
+
+    let userData = users[userId];
+
+    if (!userData || !userData.playlists) {
+        await interaction.reply('You don\'t have any playlists! Try using \'/playlist create *name*\' to create one');
+        return;
+    }
+
+    const userPlaylist = userData.playlists[playlistNameLowerCase];
+
+    if (!userPlaylist) {
+        await interaction.reply(`You have no playlist named ${playlistName}`);
+        return;
+    }
+
+    if (index && (index <= 0 || index > userPlaylist.length)) {
+        await interaction.reply(`\'index\' value of ${index} is out of bounds!`);
+        return;
+    }
+
+    // update user data
+    const removedTrack = userPlaylist.splice(index - 1, 1)[0];
+    userData.playlists[playlistNameLowerCase] = userPlaylist;
+    users[userId] = userData;
+    fs.writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
+
+    await interaction.reply(`successfully removed ${removedTrack.title} from index ${index} within playlist ${playlistName}`);
 };
 
 const deletePlaylist = async interaction => {
