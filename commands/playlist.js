@@ -58,9 +58,9 @@ module.exports = {
                         .setDescription('name of playlist to delete')
                         .setRequired(true))),
 	async execute(interaction) {
-        const subcommandName = interaction.options.getSubcommand().toLowerCase();
+        const subcommandName = interaction.options.getSubcommand();
 
-        logger.log(`/PLAYLIST ${subcommandName.toUpperCase()} user: ${interaction.member.user.username} | channel: ${interaction.member.voice.channel.name}`);
+        logger.log(`/PLAYLIST ${subcommandName.toUpperCase()} user: ${interaction.member.user.username} | guild: ${interaction.guildId}`);
 
         if (subcommandName === 'create') {
             createPlaylist(interaction);
@@ -73,6 +73,7 @@ module.exports = {
 
 const createPlaylist = async interaction => {
     const nameInput = interaction.options.getString('name');
+    const nameInputToLower = nameInput.toLowerCase();
     const userId = interaction.user.id;
 
     let userData = users[userId];
@@ -81,7 +82,7 @@ const createPlaylist = async interaction => {
         // user has no data whatsoever
         userData = {
             playlists: {
-                [nameInput]: []
+                [nameInputToLower]: []
             }
         };
     } else if (!userData.playlists) {
@@ -89,16 +90,16 @@ const createPlaylist = async interaction => {
         userData = {
             ...userData,
             playlists: {
-                [nameInput]: []
+                [nameInputToLower]: []
             }
         };
-    } else if (userData.playlists[nameInput]) {
+    } else if (userData.playlists[nameInputToLower]) {
         // user already has a playlist with this name
         await interaction.reply(`you already have a playlist with name ${nameInput}!`);
         return;
     } else {
         // user already has playlists, add this new one
-        userData.playlists[nameInput] = [];
+        userData.playlists[nameInputToLower] = [];
     }
 
     // update user data
