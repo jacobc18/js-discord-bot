@@ -17,6 +17,7 @@ const {
     // maxResponseTime,
     maxVideoPlayLengthMinutes
 } = require('../config/music.json');
+const getTimeString = require('../utils/getTimeString');
 const logger = require('../utils/logger');
 
 const youtube = new Youtube(process.env.YOUTUBE_API_KEY);
@@ -176,23 +177,8 @@ const handleSubscription = async (queue, interaction, player) => {
     await interaction.reply(`Now playing ${title}`);
 };
 
-// returns 'HH:MM:SS' or if HH is missing returns MM:SS
-const timeString = timeObj => {
-    if (timeObj[1] === true) return timeObj[0];
-
-    return `${timeObj.hours ? timeObj.hours + ':' : ''}${
-        timeObj.minutes ? timeObj.minutes : '00'
-    }:${
-        timeObj.seconds < 10
-            ? '0' + timeObj.seconds
-            : timeObj.seconds
-            ? timeObj.seconds
-            : '00'
-    }`;
-};
-
 const constructSongObj = (video, voiceChannel, user, timestamp) => {
-    let duration = timeString(video.duration);
+    let duration = getTimeString(video.duration);
     if (duration === '00:00') duration = 'Live Stream';
     // checks if the user searched for a song using a Spotify URL
     let url =
