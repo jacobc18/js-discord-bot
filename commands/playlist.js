@@ -80,12 +80,15 @@ module.exports = {
         } else if (subcommandName === 'remove-url') {
             removeTrackFromPlaylist(interaction);
             return;
+        } else if (subcommandName === 'list') {
+            listPlaylist(interaction);
+            return;
         } else if (subcommandName === 'delete') {
             deletePlaylist(interaction);
             return;
         }
         
-        await interaction.reply('/playlist commands are a work in progress');
+        await interaction.reply('invalid /playlist command');
 	}
 };
 
@@ -132,7 +135,7 @@ const createPlaylist = async interaction => {
 };
 
 const addTrackToPlaylist = async interaction => {
-    const playlistName = interaction.options.getString('playlist').toLowerCase();
+    const playlistName = interaction.options.getString('playlist');
     const playlistNameLowerCase = playlistName.toLowerCase();
     const url = interaction.options.getString('url');
     let index = interaction.options.getInteger('index');
@@ -211,7 +214,7 @@ const addTrackToPlaylist = async interaction => {
 };
 
 const removeTrackFromPlaylist = async interaction => {
-    const playlistName = interaction.options.getString('playlist').toLowerCase();
+    const playlistName = interaction.options.getString('playlist');
     const playlistNameLowerCase = playlistName.toLowerCase();
     const index = interaction.options.getInteger('index');
     const userId = interaction.user.id;
@@ -244,6 +247,47 @@ const removeTrackFromPlaylist = async interaction => {
     await interaction.reply(`successfully removed ${removedTrack.title} from index ${index} within playlist ${playlistName}`);
 };
 
+const listPlaylist = async interaction => {
+    const playlistName = interaction.options.getString('playlist-name');
+    const userId = interaction.user.id;
+
+    let userData = users[userId];
+
+    if (!userData || !userData.playlists || (userData.playlists && Object.keys(userData.playlists).length === 0)) {
+        await interaction.reply('You don\'t have any playlists! Try using \'/playlist create *name*\' to create one');
+        return;
+    }
+
+    const userPlaylists = userData.playlists;
+
+    if (!playlistName) {
+        // list playlists
+        let output = 'Your playlists:\n';
+        for (let key in userPlaylists) {
+            const playlist = userPlaylists[key];
+            output += `${key}\t|\ttrack count: ${playlist.length}\t|\tduration: ${getTotalPlaylistDuration(playlist)}\n`;
+        }
+        await interaction.reply(output);
+        return;
+    }
+
+    const userPlaylist = userPlaylists[playlistName.toLowerCase()];
+
+    if (userPlaylist.length === 0) {
+        await interaction.reply(`playlist ${playlistName} is empty!`);
+        return;
+    }
+
+    // list tracks within a playlist
+    let output = `Tracks within ${playlistName}:\n`;
+    for (let i = 0; i < userPlaylist.length; ++i) {
+        const track = userPlaylist[i];
+        output += `${track.title}\t|\tduration: ${track.duration}\n`;
+    }
+    output += `total playlist duration: ${getTotalPlaylistDuration(userPlaylist)}`;
+    await interaction.reply(output);
+};
+
 const deletePlaylist = async interaction => {
     const nameInput = interaction.options.getString('name');
     const nameInputLowerCase = nameInput.toLowerCase();
@@ -262,6 +306,28 @@ const deletePlaylist = async interaction => {
     fs.writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
 
     await interaction.reply(`successfully deleted playlist named ${nameInput}`);
+};
+
+const getTotalPlaylistDuration = playlist => {
+    let totalSec = 0;
+    for (let i = 0; i < playlist.length; ++i) {
+        const track = playlist[i];
+        const durationString = track.duration;
+        const durationSplit = durationString.split(':');
+        let multiplier = 3600;
+        if (durationSplit.length === 2) {
+            multiplier = 60;
+        }
+        for (let j = 0; j < durationSplit.length; ++j) {
+            totalSec += +durationSplit[j] * multiplier;
+            multiplier /= 60;
+        }
+    }
+    const hours = Math.floor(totalSec / 3600);
+    totalSec -= hours * 3600;
+    const minutes = Math.floor(totalSec / 60);
+    const seconds = totalSec % 60;
+    return `${hours ? hours + ':' : ''}${minutes < 10 ? '0' + minutes : minutes ? minutes : '00'}:${seconds < 10 ? '0' + seconds : seconds ? seconds : '00'}`;
 };
 
 const isYouTubeVideoURL = v =>
