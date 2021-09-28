@@ -1,6 +1,11 @@
 const fs = require('fs');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const {
+    AudioPlayerStatus
+} =  require('@discordjs/voice');
 const Youtube = require('simple-youtube-api');
+const MusicPlayer = require('../utils/MusicPlayer');
+const createGuildData = require('../utils/createGuildData');
 const {
     playLiveStreams,
     maxVideoPlayLengthMinutes,
@@ -8,6 +13,8 @@ const {
 } = require('../config/music.json');
 const users = require('../data/users.json');
 const getTimeString = require('../utils/getTimeString');
+const constructSongObj = require('../utils/constructSongObj');
+const handleSubscription = require('../utils/handleSubscription');
 const logger = require('../utils/logger');
 
 const youtube = new Youtube(process.env.YOUTUBE_API_KEY);
@@ -65,6 +72,14 @@ module.exports = {
                 .addStringOption(option =>
                     option.setName('name')
                         .setDescription('name of playlist to delete')
+                        .setRequired(true)))
+        .addSubcommand(subcommand => 
+            subcommand
+                .setName('play')
+                .setDescription('plays a playlist with given name')
+                .addStringOption(option =>
+                    option.setName('name')
+                        .setDescription('name of playlist to play/queue')
                         .setRequired(true))),
 	async execute(interaction) {
         const subcommandName = interaction.options.getSubcommand();
@@ -85,6 +100,9 @@ module.exports = {
             return;
         } else if (subcommandName === 'delete') {
             deletePlaylist(interaction);
+            return;
+        } else if (subcommandName === 'play') {
+            playPlaylist(interaction);
             return;
         }
         
@@ -306,6 +324,80 @@ const deletePlaylist = async interaction => {
     fs.writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
 
     await interaction.reply(`successfully deleted playlist named ${nameInput}`);
+};
+
+const playPlaylist = async interaction => {
+    if (!interaction.client.guildData.get(interaction.guildId)) {
+        interaction.client.guildData.set(interaction.guildId, createGuildData(interaction.guildId));
+    }
+
+    const nameInput = interaction.options.getString('name');
+    const nameInputLowerCase = nameInput.toLowerCase();
+    const userId = interaction.user.id;
+    const channelId = interaction.member.voice.channelId;
+
+    if (!channelId) {
+        await interaction.reply('You must first join a voice channel');
+        return;
+    }
+
+    const userData = users[userId];
+
+    if (!userData || ! userData.playlists || !userData.playlists[nameInputLowerCase]) {
+        await interaction.reply(`you have no playlist named ${nameInput}! Try using \'/playlist create *name*\' to create one.\nUse command '/playlist list' to view a list of your playlists`);
+        return;
+    }
+
+    const userPlaylist = userData.playlists[nameInputLowerCase];
+
+    if (userPlaylist.length === 0) {
+        await interaction.reply(`you have no tracks in playlist ${nameInput}! Try using /playlist add-url to add tracks`);
+        return;
+    }
+
+    let player = interaction.client.musicPlayerManager.get(interaction.guildId);
+
+    if (!player) {
+        player = new MusicPlayer();
+        interaction.client.musicPlayerManager.set(interaction.guildId, player);
+    }
+
+    if (player.commandLock) {
+        return await interaction.followUp(
+            'Please wait until the last play call is processed'
+        );
+    }
+
+    player.commandLock = true;
+
+    // enqueue each video from the playlist
+    for (let i = 0; i < userPlaylist.length; ++i) {
+        const track = userPlaylist[i];
+        const video = await youtube.getVideoByID(track.id).catch(async function() {
+            await interaction.reply(
+                `:x: There was a problem getting the video from playlist entitled: ${track.title}`
+            );
+        });
+    
+        if (video) {
+            player.queue.push(
+                constructSongObj(
+                    video,
+                    interaction.member.voice.channel,
+                    interaction.member.user,
+                    // timestamp
+                )
+            );
+        }
+    }
+
+    if (player.audioPlayer.state.status !== AudioPlayerStatus.Playing) {
+        // first video in queue, start playing
+        handleSubscription(player.queue, interaction, player);
+    } else {
+        // video was added to queue
+        await interaction.reply(`Enqueued tracks within playlist named ${nameInput}`);
+    }
 };
 
 const getTotalPlaylistDuration = playlist => {

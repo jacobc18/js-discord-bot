@@ -3,7 +3,31 @@
     "greetings": [
       "ew, it smells like wee wee bref",
       "somebody hide the sheep"
-    ]
+    ],
+    "playlists": {
+      "rl": [
+        {
+          "id": "YQ5G8m2XOZg",
+          "title": "Quiet Riot - Cum On Feel The Noize",
+          "duration": "4:49"
+        },
+        {
+          "id": "Itzk9W4YXw4",
+          "title": "Miley Cyrus - Wrecking Ball (Lyrics)",
+          "duration": "3:47"
+        },
+        {
+          "id": "bRFD0qzSXwo",
+          "title": "Demon Time - Radio Base ft. Isis The Goddess [Official Video]",
+          "duration": "3:57"
+        },
+        {
+          "id": "uTyd5TvWfMg",
+          "title": "Boogie Man _ Radio Base Ft. Swag Da P [music video]",
+          "duration": "3:02"
+        }
+      ]
+    }
   },
   "190098635969658881": {
     "greetings": [

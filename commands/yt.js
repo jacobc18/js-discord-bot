@@ -1,9 +1,6 @@
 require('dotenv').config();
 
 const {
-	joinVoiceChannel,
-    entersState,
-    VoiceConnectionStatus,
     AudioPlayerStatus
 } =  require('@discordjs/voice');
 const { SlashCommandBuilder } = require('@discordjs/builders');
@@ -17,7 +14,9 @@ const {
     // maxResponseTime,
     maxVideoPlayLengthMinutes
 } = require('../config/music.json');
-const getTimeString = require('../utils/getTimeString');
+const constructSongObj = require('../utils/constructSongObj');
+const handleSubscription = require('../utils/handleSubscription');
+const deleteMusicPlayerIfNeeded = require('../utils/deleteMusicPlayerIfNeeded');
 const logger = require('../utils/logger');
 
 const youtube = new Youtube(process.env.YOUTUBE_API_KEY);
@@ -137,75 +136,5 @@ module.exports = {
         }
 
         logger.log(`/YT user: ${interaction.member.user.username} | channel: ${voiceChannel.name} | ${query}${logStringAdditions}`);
-    }
-};
-
-const handleSubscription = async (queue, interaction, player) => {
-    let voiceChannel = queue[0].voiceChannel;
-    if (!voiceChannel) {
-        // happens when loading a saved playlist
-        voiceChannel = interaction.member.voice.channel;
-    }
-    // if (interaction.guild.me.voice.channel !== null) {
-    //   if (interaction.guild.me.voice.channel.id !== queue[0].voiceChannel.id) {
-    //     queue[0].voiceChannel = interaction.guild.me.voice.channel;
-    //   }
-    // }
-    const title = player.queue[0].title;
-    let connection = player.connection;
-    if (!connection) {
-        connection = joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: interaction.guild.id,
-            adapterCreator: interaction.guild.voiceAdapterCreator
-        });
-        connection.on('error', console.error);
-    }
-    player.textChannel = interaction.channel;
-    player.passConnection(connection);
-  
-    try {
-        await entersState(player.connection, VoiceConnectionStatus.Ready, 10000);
-    } catch (err) {
-        deleteMusicPlayerIfNeeded(interaction);
-        console.error(err);
-        await interaction.followUp({ content: 'Failed to join your channel' });
-
-        return;
-    }
-    player.process(player.queue);
-    await interaction.reply(`Now playing ${title}`);
-};
-
-const constructSongObj = (video, voiceChannel, user, timestamp) => {
-    let duration = getTimeString(video.duration);
-    if (duration === '00:00') duration = 'Live Stream';
-    // checks if the user searched for a song using a Spotify URL
-    let url =
-        video.duration[1] == true
-            ? video.url
-            : `https://www.youtube.com/watch?v=${video.raw.id}`;
-    return {
-        url,
-        title: video.title,
-        rawDuration: video.duration,
-        duration,
-        timestamp,
-        thumbnail: video.thumbnails.high.url,
-        voiceChannel,
-        memberDisplayName: user.username,
-        memberAvatar: user.avatarURL('webp', false, 16)
-    };
-};
-
-const deleteMusicPlayerIfNeeded = interaction => {
-    const player = interaction.client.musicPlayerManager.get(interaction.guildId);
-    if (player) {
-        if (
-            (player.queue.length && !player.nowPlaying) ||
-            (!player.queue.length && !player.nowPlaying)
-        )
-        return;
-      return interaction.client.musicPlayerManager.delete(interaction.guildId);
     }
 };
