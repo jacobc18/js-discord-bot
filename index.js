@@ -3,8 +3,6 @@ require('dotenv').config();
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
-const getRandomBetween = require('./utils/getRandomBetween');
-
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -86,8 +84,7 @@ client.on('messageCreate', async message => {
   } else if (command === 'echo') {
     if (splitArgs.length > 0) {
       message.channel.send(splitArgs.join(' '));
-    }
-    else {
+    } else {
       message.channel.send('Tell me what to say ya bimbus.');
     }
   } else { message.channel.send('not a valid command'); }

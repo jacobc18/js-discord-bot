@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 const getRandomBetween = require('../utils/getRandomBetween');
+const logger = require('../utils/logger');
 
 module.exports = {
     data: {
@@ -18,12 +19,12 @@ module.exports = {
         // imgur gallery hash is static for now, can be dynamic in the future
         await fetch('https://api.imgur.com/3/gallery/zh0IJgo', fetchParams).then(response => response.json())
             .then(json => {
-                console.log(json.data.images.length);
                 for (let i = 0; i < json.data.images.length; i++) {
                     imageList.push(json.data.images[i]);
                 }
             });
         // maybe it would be better to grab this data from imgur once and hold it as long as the bot is alive?
         message.channel.send(imageList[getRandomBetween(0, imageList.length)].gifv);
+        logger.log(`!COMBO user: ${message.member.user.username} | guildId: ${message.guildId}`);
     }
 };
