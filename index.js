@@ -97,8 +97,7 @@ client.on('messageCreate', async message => {
     const fetchParams = {
       method: "get",
       headers: {
-          // Jake, about adding this client ID to .env file
-          Authorization: "Client-ID " + process.env.IMGUR_CLIENT_ID
+          Authorization: "Client-ID " + "3158d17207d99c2" //process.env.IMGUR_CLIENT_ID
       }
     };
     // imgur gallery hash is static for now, can be dynamic in the future
@@ -109,6 +108,7 @@ client.on('messageCreate', async message => {
           imageList.push(json.data.images[i]);
         }
     });
+    // maybe it would be better to grab this data from imgur once and hold it as long as the bot is alive?
     message.channel.send(imageList[getRandomBetween(0, imageList.length)].gifv);
 
   } else { message.channel.send('not a valid command'); }
