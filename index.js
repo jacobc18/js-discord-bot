@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const fetch = require('node-fetch');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
 const getRandomBetween = require('./utils/getRandomBetween');
 
@@ -91,26 +90,6 @@ client.on('messageCreate', async message => {
     else {
       message.channel.send('Tell me what to say ya bimbus.');
     }
-  } else if (command === 'combo') { 
-    // can we set this command up as a module similar to how the slash command are set up?
-    const imageList = [];
-    const fetchParams = {
-      method: "get",
-      headers: {
-          Authorization: "Client-ID " + "3158d17207d99c2" //process.env.IMGUR_CLIENT_ID
-      }
-    };
-    // imgur gallery hash is static for now, can be dynamic in the future
-    await fetch('https://api.imgur.com/3/gallery/zh0IJgo', fetchParams).then(response => response.json())
-      .then(json => {
-        console.log(json.data.images.length);
-        for (let i = 0; i < json.data.images.length; i++) {
-          imageList.push(json.data.images[i]);
-        }
-    });
-    // maybe it would be better to grab this data from imgur once and hold it as long as the bot is alive?
-    message.channel.send(imageList[getRandomBetween(0, imageList.length)].gifv);
-
   } else { message.channel.send('not a valid command'); }
 });
 
