@@ -2,7 +2,10 @@ require('dotenv').config();
 
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
+const fetch = require('node-fetch');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
+const getRandomBetween = require('./utils/getRandomBetween');
+
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -74,15 +77,41 @@ client.on('interactionCreate', async interaction => {
 
 client.on('messageCreate', async message => {
   if (message.content.charAt(0) !== '!') return;
+  if (message.author.bot) return;
 
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
-
+  
   if (client.commands.has(command)) {
     await client.commands.get(command).execute(message, splitArgs);
   } else if (command === 'echo') {
-    message.channel.send(splitArgs.join(' '));
-  }
+    if (splitArgs.length > 0) {
+      message.channel.send(splitArgs.join(' '));
+    }
+    else {
+      message.channel.send('Tell me what to say ya bimbus.');
+    }
+  } else if (command === 'combo') { 
+    // can we set this command up as a module similar to how the slash command are set up?
+    const imageList = [];
+    const fetchParams = {
+      method: "get",
+      headers: {
+          // Jake, about adding this client ID to .env file
+          Authorization: "Client-ID " + process.env.IMGUR_CLIENT_ID
+      }
+    };
+    // imgur gallery hash is static for now, can be dynamic in the future
+    await fetch('https://api.imgur.com/3/gallery/zh0IJgo', fetchParams).then(response => response.json())
+      .then(json => {
+        console.log(json.data.images.length);
+        for (let i = 0; i < json.data.images.length; i++) {
+          imageList.push(json.data.images[i]);
+        }
+    });
+    message.channel.send(imageList[getRandomBetween(0, imageList.length)].gifv);
+
+  } else { message.channel.send('not a valid command'); }
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
