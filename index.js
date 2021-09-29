@@ -74,15 +74,20 @@ client.on('interactionCreate', async interaction => {
 
 client.on('messageCreate', async message => {
   if (message.content.charAt(0) !== '!') return;
+  if (message.author.bot) return;
 
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
-
+  
   if (client.commands.has(command)) {
     await client.commands.get(command).execute(message, splitArgs);
   } else if (command === 'echo') {
-    message.channel.send(splitArgs.join(' '));
-  }
+    if (splitArgs.length > 0) {
+      message.channel.send(splitArgs.join(' '));
+    } else {
+      message.channel.send('Tell me what to say ya bimbus.');
+    }
+  } else { message.channel.send('not a valid command'); }
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
