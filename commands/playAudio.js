@@ -22,9 +22,9 @@ module.exports = {
         }
 
         const audioFileNames = fs.readdirSync(AUDIOFILES_DIR_PATH);
-        const fileName = interaction.options.getString('filename');
+        const fileName = interaction.options?.getString('filename');
 
-        if (!audioFileNames.includes(fileName)) {
+        if (!fileName || !audioFileNames.includes(fileName)) {
             await interaction.reply(`Could not find an audio file named: ${fileName}.\nTry using /listaudio to get a list of available audio files.`);
             return;
         }
@@ -36,7 +36,5 @@ module.exports = {
 
         connectAndPlayAudioFile(channel, fullFilePath);
         await interaction.reply(`successfully played audio file: ${fileName}`);
-        // todo: delay this deletion
-        // await interaction.deleteReply();
 	}
 };
