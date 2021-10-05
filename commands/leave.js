@@ -8,8 +8,16 @@ module.exports = {
 	async execute(message) {
         const guildId = message.guildId;
         const audioPlayer = message.client.musicPlayerManager.get(guildId);
+        const voiceChannel = message.member.voice.channel;
+        
         if (!audioPlayer) {
             await message.reply('there is no audio being played right now');
+            return;
+        }
+
+        if (!voiceChannel) {
+            await message.reply('you must first join a voice channel');
+            return;
         }
 
         audioPlayer.connection.destroy();

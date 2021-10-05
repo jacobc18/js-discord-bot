@@ -12,7 +12,7 @@ const { setTimeout } = require('timers');
 const { promisify } = require('util');
 // const ytdl = require('ytdl-core');
 const { raw: youtubeDlRaw } = require('youtube-dl-exec');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 
 const wait = promisify(setTimeout);
@@ -112,8 +112,8 @@ class MusicPlayer {
         ).queueHistory;
         const playingEmbed = new MessageEmbed()
           .setThumbnail(this.nowPlaying.thumbnail)
-          .setTitle(this.nowPlaying.title)
-          .setColor('#ff0000')
+          .setTitle(`Now Playing:\n${this.nowPlaying.title}`)
+          .setColor('#00ff00')
           .addField('Duration', ':stopwatch: ' + this.nowPlaying.duration, true)
           .setFooter(
             `Requested by ${this.nowPlaying.memberDisplayName}`,
@@ -122,7 +122,39 @@ class MusicPlayer {
         if (queueHistory.length) {
           playingEmbed.addField('Previous Song', queueHistory[0].title, true);
         }
-        this.textChannel.send({ embeds: [playingEmbed] });
+        const row = new MessageActionRow()
+          .addComponents(
+            new MessageButton()
+              .setCustomId('cmd:leave')
+              .setLabel('')
+              .setStyle('DANGER')
+              .setEmoji('🛑'),
+            new MessageButton()
+              .setCustomId('cmd:pause')
+              .setLabel('')
+              .setStyle('PRIMARY')
+              .setEmoji('⏸️')
+          );
+        this.textChannel.send({ embeds: [playingEmbed], components: [row] });
+      } else if (newState.status === AudioPlayerStatus.Paused) {
+        const pausedEmbed = new MessageEmbed()
+          .setThumbnail(this.nowPlaying.thumbnail)
+          .setTitle(`Paused:\n${this.nowPlaying.title}`)
+          .setColor('#5865f2');
+        const row = new MessageActionRow()
+          .addComponents(
+            new MessageButton()
+              .setCustomId('cmd:leave')
+              .setLabel('')
+              .setStyle('DANGER')
+              .setEmoji('🛑'),
+            new MessageButton()
+              .setCustomId('cmd:resume')
+              .setLabel('')
+              .setStyle('SUCCESS')
+              .setEmoji('▶️')
+          );
+        this.textChannel.send({ embeds: [pausedEmbed], components: [row] });
       }
     });
 
