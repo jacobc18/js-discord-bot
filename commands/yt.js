@@ -57,7 +57,7 @@ module.exports = {
         }
 
         if (player.commandLock) {
-            return await interaction.followUp(
+            return await interaction.reply(
                 'Please wait until the last play call is processed'
             );
         }
@@ -84,7 +84,7 @@ module.exports = {
 
             const video = await youtube.getVideoByID(id).catch(function() {
                 deleteMusicPlayerIfNeeded(interaction);
-                interaction.followUp(
+                interaction.reply(
                     ':x: There was a problem getting the video you provided'
                 );
             });
@@ -92,7 +92,7 @@ module.exports = {
 
             if (video.raw.snippet.liveBroadcastContent === 'live' && !playLiveStreams) {
                 deleteMusicPlayerIfNeeded(interaction);
-                interaction.followUp(
+                interaction.reply(
                     'Live streams are disabled in this server'
                 );
                 return;
@@ -100,14 +100,14 @@ module.exports = {
 
             if ((video.duration.days * 1440) + (video.duration.hours * 60) + video.duration.minutes > maxVideoPlayLengthMinutes) {
                 deleteMusicPlayerIfNeeded(interaction);
-                interaction.followUp(
+                interaction.reply(
                     `Videos longer than ${maxVideoPlayLengthMinutes} minutes are disabled`
                 );
                 return;
             }
 
             if (player.length > maxQueueLength) {
-                interaction.followUp(
+                interaction.reply(
                     `The queue hit its limit of ${maxQueueLength}, please wait a bit before attempting to play more songs`
                 );
                 return;

@@ -363,7 +363,7 @@ const playPlaylist = async interaction => {
     }
 
     if (player.commandLock) {
-        return await interaction.followUp(
+        return await interaction.reply(
             'Please wait until the last play call is processed'
         );
     }
