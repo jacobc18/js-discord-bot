@@ -3,7 +3,8 @@
     "greetings": [
       "*AUDIOFILE*NewWorldJake.mp3",
       "ew, it smells like wee wee bref",
-      "somebody hide the sheep"
+      "somebody hide the sheep",
+      "*NAME* is here to smack some boulders"
     ],
     "playlists": {
       "rl": [
@@ -29,6 +30,13 @@
         }
       ]
     }
+  },
+  "527244860709666846": {
+    "greetings": [
+      "giggle kirbie is here",
+      "kruboobie has arrived",
+      "krubby krub krub in the tub"
+    ]
   },
   "190098635969658881": {
     "greetings": [
@@ -112,7 +120,8 @@
   },
   "188844366385774593": {
     "greetings": [
-      "big ben comin in"
+      "big ben comin in",
+      "come on down to bon's bons"
     ]
   },
   "126713587308691456": {
