@@ -68,6 +68,9 @@ client.on('interactionCreate', async interaction => {
 		await client.commands.get(commandName).execute(interaction);
 	} catch (error) {
 		console.error(error);
+    if (interaction.deferred || interaction.replied) {
+      return interaction.editReply({ content: 'There was an error while executing this command!', ephemeral: true });
+    }
 		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });

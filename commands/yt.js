@@ -144,6 +144,14 @@ module.exports = {
             const token = await authenticateSpotify();
             const playlistData = await getSpotifyPlaylist(token, playlistId);
 
+            if (!playlistData) {
+                await interaction.reply(
+                    `:x: There was a problem getting the playlist via Spotify with id: ${playlistId}`
+                );
+            }
+
+            await interaction.deferReply();
+
             const playlistTracks = playlistData.tracks.items;
             for (let i = 0; i < playlistTracks.length; ++i) {
                 const track = playlistTracks[i].track;
@@ -154,9 +162,8 @@ module.exports = {
                 const ytSearchQuery = concatTrackDetails(trackData);
                 const ytSearchResults = await YoutubeSearch.searchOne(ytSearchQuery, 'video');
                 if (!ytSearchResults || !ytSearchResults.id) {
-                    await interaction.reply(
-                        `:x: There was a problem searching the Spotify video from playlist entitled: ${track.name}`
-                    );
+                    interaction.channel.send(`:x: There was a problem searching the Spotify video from playlist entitled: ${track.name}`);
+                    continue;
                 }
 
                 const video = await youtube.getVideoByID(ytSearchResults.id).catch(async function() {

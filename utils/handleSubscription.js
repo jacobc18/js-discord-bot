@@ -33,5 +33,10 @@ module.exports = async (queue, interaction, player) => {
         return;
     }
     player.process(player.queue);
-    await interaction.reply(`Now playing ${title}`);
+
+    if (interaction.deferred || interaction.replied) {
+        await interaction.editReply(`Now playing ${title}`);
+    } else {
+        await interaction.reply(`Now playing ${title}`);
+    }
 };
