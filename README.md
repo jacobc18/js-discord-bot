@@ -44,6 +44,8 @@ DISCORD_TOKEN=your-discord-bot-token-goes-here
 CLIENT_ID=your-discord-client-id-goes-here
 YOUTUBE_API_KEY=your-youtube-api-key-goes-here
 IMGUR_CLIENT_ID=your-imgur-client-id-goes-here
+SPOTIFY_CLIENT_ID=your-spotify-client-id-goes-here
+SPOTIFY_SECRET=your-spotify-secret-goes-here
 ```
 
 To get a Discord bot token and Discord client ID see [How to Make a Discord Bot in the Developer Portal](https://realpython.com/how-to-make-a-discord-bot-python/#how-to-make-a-discord-bot-in-the-developer-portal).
@@ -52,6 +54,8 @@ To get a YouTube API key follow the steps outlined [here](https://developers.goo
 
 To get an Imgur Client ID, you simply need an Imgur account. Register your bot (application) [here](https://api.imgur.com/oauth2/addclient) and fill out the form.
 **Application Name** and **Email** are required fields. Under **Authorzation Type**, select *OAuth 2 authorization **without** a callback URL*. Imgur will then supply you with a fresh Client ID and Client Secret, but you only really need the Client ID. If you forget it or misplace it, your can access it again in you [Imgur Account Settings](https://imgur.com/account/settings/apps).
+
+To get a Spotify Client ID and Spotify Secret you must first connect Spotify Developer to your Spotify account [here](https://developer.spotify.com/dashboard/login). Don't worry, this works with free accounts as well. Once the connection is made, create a new application. On the application dashboard you will find your Spotify Client ID and Spotify secret.
 
 After following the steps outlined in [How to Make a Discord Bot in the Developer Portal](https://realpython.com/how-to-make-a-discord-bot-python/#how-to-make-a-discord-bot-in-the-developer-portal), you need to invite the bot to the Discord guilds you would like it to operate in. To do this you will need to navigate to your application in the [Discord Developer Portal](https://discord.com/developers/applications) and then to the ``` OAuth2``` tab. 
 
