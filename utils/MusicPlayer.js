@@ -133,7 +133,12 @@ class MusicPlayer {
               .setCustomId('cmd:pause')
               .setLabel('')
               .setStyle('PRIMARY')
-              .setEmoji('⏸️')
+              .setEmoji('⏸️'),
+            new MessageButton()
+              .setCustomId('cmd:skip')
+              .setLabel('')
+              .setStyle('PRIMARY')
+              .setEmoji('⏭️')
           );
         this.textChannel.send({ embeds: [playingEmbed], components: [row] });
       } else if (newState.status === AudioPlayerStatus.Paused) {
@@ -152,7 +157,12 @@ class MusicPlayer {
               .setCustomId('cmd:resume')
               .setLabel('')
               .setStyle('SUCCESS')
-              .setEmoji('▶️')
+              .setEmoji('▶️'),
+            new MessageButton()
+              .setCustomId('cmd:skip')
+              .setLabel('')
+              .setStyle('PRIMARY')
+              .setEmoji('⏭️')
           );
         this.textChannel.send({ embeds: [pausedEmbed], components: [row] });
       }
