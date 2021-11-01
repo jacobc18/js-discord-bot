@@ -13,6 +13,7 @@ const { promisify } = require('util');
 // const ytdl = require('ytdl-core');
 const { raw: youtubeDlRaw } = require('youtube-dl-exec');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const logger = require('./logger');
 
 
 const wait = promisify(setTimeout);
@@ -44,8 +45,9 @@ class MusicPlayer {
               VoiceConnectionStatus.Connecting,
               5000
             );
-          } catch {
+          } catch(err) {
             this.connection.destroy();
+            logger.log(err);
           }
         } else if (this.connection.rejoinAttemps < 5) {
           await wait((this.connection.rejoinAttemps + 1) * 5000);
@@ -71,7 +73,8 @@ class MusicPlayer {
             VoiceConnectionStatus.Ready,
             20000
           );
-        } catch {
+        } catch(err) {
+          logger.log(err);
           if (this.connection.state.status !== VoiceConnectionStatus.Destroyed)
             this.connection.destroy();
         }
@@ -199,7 +202,7 @@ class MusicPlayer {
       const resource = await createAudioResourceWithYTDLRaw(song.url);
       this.audioPlayer.play(resource);
     } catch (err) {
-      console.error(err);
+      logger.log(err);
       return this.process(queue);
     }
   }
@@ -228,7 +231,7 @@ class MusicPlayer {
   //     });
   //     this.audioPlayer.play(resource);
   //   } catch (err) {
-  //     console.error(err);
+  //     logger.log(err);
   //     return this.process(queue);
   //   }
   // }
