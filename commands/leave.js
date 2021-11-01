@@ -5,11 +5,11 @@ module.exports = {
         name: 'leave',
         type: 'text'
     },
-	async execute(message) {
+    async execute(message) {
         const guildId = message.guildId;
         const audioPlayer = message.client.musicPlayerManager.get(guildId);
         const voiceChannel = message.member.voice.channel;
-        
+
         if (!audioPlayer) {
             await message.reply('there is no audio being played right now');
             return;
@@ -20,11 +20,13 @@ module.exports = {
             return;
         }
 
-        audioPlayer.connection.destroy();
+        if (audioPlayer && audioPlayer.connection) {
+            audioPlayer.connection.destroy();
+        }
         message.client.musicPlayerManager.delete(guildId);
 
         logger.log(`!LEAVE user: ${message.member.user.username} | guildId: ${guildId}`);
 
         await message.reply('left the voice channel');
-	}
+    }
 };

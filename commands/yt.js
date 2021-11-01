@@ -23,11 +23,17 @@ const logger = require('../utils/logger');
 
 const youtube = new Youtube(process.env.YOUTUBE_API_KEY);
 
+const SPOTIFY_PLAYLIST_TYPE = 'playlist';
+const SPOTIFY_ALBUM_TYPE = 'album';
+
 const isYouTubeVideoURL = v =>
   v.match(/^(http(s)?:\/\/)?(m.)?((w){3}.)?(music.)?youtu(be|.be)?(\.com)?\/.+/);
 
 const isSpotifyPlaylistURL = v =>
   v.match(/^(spotify:|https:\/\/[a-z]+\.spotify\.com\/playlist\/.+)/);
+
+const isSpotifyAlbumURL = v =>
+  v.match(/^(spotify:|https:\/\/[a-z]+\.spotify\.com\/album\/.+)/);
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -136,25 +142,37 @@ module.exports = {
             }
 
             logStringAdditions += ` | video.title: ${video.title}`;
-        } else if (isSpotifyPlaylistURL(query)) {
-            const playlistQuery = query.replace(/spotify:|https:\/\/[a-z]+\.spotify\.com\/playlist\//, '');
-            const splitQuery = playlistQuery.split('?');
-            const playlistId = splitQuery[0];
+        } else if (getTypeOfSpotifyURL(query)) {
+            const spotifyURLType = getTypeOfSpotifyURL(query);
+
+            let replaceQuery;
+            if (spotifyURLType === SPOTIFY_ALBUM_TYPE) {
+                replaceQuery = query.replace(/spotify:|https:\/\/[a-z]+\.spotify\.com\/album\//, '')
+            } else {
+                replaceQuery = query.replace(/spotify:|https:\/\/[a-z]+\.spotify\.com\/playlist\//, '')
+            }
+            const splitQuery = replaceQuery.split('?');
+            const spotifyObjID = splitQuery[0];
 
             const token = await authenticateSpotify();
-            const playlistData = await getSpotifyPlaylist(token, playlistId);
+            let spotifyData;
+            if (spotifyURLType === SPOTIFY_ALBUM_TYPE) {
+                spotifyData = await getSpotifyAlbum(token, spotifyObjID);
+            } else {
+                spotifyData = await getSpotifyPlaylist(token, spotifyObjID);
+            }
 
-            if (!playlistData) {
+            if (!spotifyData) {
                 await interaction.reply(
-                    `:x: There was a problem getting the playlist via Spotify with id: ${playlistId}`
+                    `:x: There was a problem getting the ${spotifyURLType} via Spotify with id: ${spotifyObjID}`
                 );
             }
 
             await interaction.deferReply();
 
-            const playlistTracks = playlistData.tracks.items;
-            for (let i = 0; i < playlistTracks.length; ++i) {
-                const track = playlistTracks[i].track;
+            const spotifyTracks = spotifyData.tracks.items;
+            for (let i = 0; i < spotifyTracks.length; ++i) {
+                const track = spotifyTracks[i].track ? spotifyTracks[i].track : spotifyTracks[i];
                 const trackData = {
                     name: track.name,
                     artists: track.artists
@@ -189,7 +207,7 @@ module.exports = {
                 handleSubscription(player.queue, interaction, player);
             } else {
                 // video was added to queue
-                await interaction.reply(`Enqueued tracks within Spotify playlist entitled ${playlistData.name} from link: ${query}`);
+                await interaction.reply(`Enqueued tracks within Spotify ${spotifyURLType} entitled ${spotifyData.name} from link: ${query}`);
             }
         } else {
             await interaction.reply('invalid query format');
@@ -220,10 +238,38 @@ const authenticateSpotify = async() => {
     }
 };
 
+// returns SPOTIFY_PLAYLIST_TYPE for Spotify playlist URL
+// OR returns SPOTIFY_ALBUM_TYPE for Spotify album URL
+// else returns null;
+const getTypeOfSpotifyURL = (query) => {
+    if (isSpotifyPlaylistURL(query)) {
+        return SPOTIFY_PLAYLIST_TYPE;
+    } else if (isSpotifyAlbumURL(query)) {
+        return SPOTIFY_ALBUM_TYPE;
+    }
+
+    return null;
+}
+
 const getSpotifyPlaylist = async(token, playlistId) => {
     try {
-        
         const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+
+        return data;
+    } catch (err) {
+        logger.log(err);
+    }
+};
+
+const getSpotifyAlbum = async(token, albumId) => {
+    try {
+        const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`
