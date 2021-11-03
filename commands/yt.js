@@ -19,6 +19,7 @@ const {
 const constructSongObj = require('../utils/constructSongObj');
 const handleSubscription = require('../utils/handleSubscription');
 const deleteMusicPlayerIfNeeded = require('../utils/deleteMusicPlayerIfNeeded');
+const shuffleArray = require('../utils/shuffleArray');
 const logger = require('../utils/logger');
 
 const youtube = new Youtube(process.env.YOUTUBE_API_KEY);
@@ -58,7 +59,15 @@ module.exports = {
 
         let logStringAdditions = '';
 
-        const query = interaction.options.getString('query');
+        let query = interaction.options.getString('query');
+
+        const querySplit = query.split(' ');
+        const shuffleFlag = querySplit[querySplit.length - 1] === '-s' || querySplit[querySplit.length - 1] === '-shuffle'
+
+        if (shuffleFlag) {
+            querySplit.pop();
+        }
+        query = querySplit.join(' ');
 
         let player = interaction.client.musicPlayerManager.get(interaction.guildId);
 
@@ -170,7 +179,11 @@ module.exports = {
 
             await interaction.deferReply();
 
-            const spotifyTracks = spotifyData.tracks.items;
+            let spotifyTracks = spotifyData.tracks.items;
+            if (shuffleFlag) {
+                spotifyTracks = shuffleArray(spotifyTracks);
+            }
+
             for (let i = 0; i < spotifyTracks.length; ++i) {
                 const track = spotifyTracks[i].track ? spotifyTracks[i].track : spotifyTracks[i];
                 const trackData = {
