@@ -368,6 +368,8 @@ const playPlaylist = async interaction => {
         );
     }
 
+    await interaction.deferReply();
+
     player.commandLock = true;
 
     // enqueue each video from the playlist

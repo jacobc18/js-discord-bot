@@ -19,7 +19,7 @@
     "node-fetch": "^2.6.5",
     "say": "0.16.0",
     "simple-youtube-api": "5.2.1",
-    "youtube-dl-exec": "1.2.6",
+    "youtube-dl-exec": "1.x.x",
     "youtube-sr": "4.1.8",
     "ytdl-core": "4.9.1"
   }
