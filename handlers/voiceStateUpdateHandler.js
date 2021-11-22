@@ -19,6 +19,12 @@ module.exports = function(client, oldState, newState) {
     const memberId = newState.id;
     const member = newState.guild.members.cache.get(memberId);
 
+    if (memberId === '148979092681785346') {
+        // dont let pastrami do anything for Brad
+        logger.log(`IGNORE GREET user: ${member.user.username} | channel: ${member.voice.channel.name}`);
+        return;
+    }
+
     if (member.user.bot) return;
 
     // don't greet someone if the musicPlayer is playing

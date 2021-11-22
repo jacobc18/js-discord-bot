@@ -1,5 +1,7 @@
 const logger = require('../utils/logger');
 
+const quickChartIOHost = 'https://quickchart.io/chart?c=';
+
 module.exports = {
     data: {
         name: '69ers',
@@ -22,6 +24,10 @@ module.exports = {
 
             return bEarned - aEarned;
         });
+
+        // don't use labels
+        // const chartLabels = [];
+        const chartData = [];
 
         let outputStr = '```Top 69ers:\n';
         outputStr += `${'Name'.padEnd(30)}| Count |${'Time Achieved'.padStart(15)}\n`;
@@ -47,9 +53,30 @@ module.exports = {
             };
             const timeAchievedStr = `${dateInfoUTC.month}/${dateInfoUTC.date}/${dateInfoUTC.year} ${dateInfoUTC.hours}:${dateInfoUTC.minutes}`.padStart(15);
             outputStr += `${usernameStr}| ${earnedStr} |${timeAchievedStr}\n`;
+
+            // push chart variables
+            // chartLabels.push(user.username.replaceAll(' ', ''));
+            chartData.push(`${earned}`);
         }
 
         outputStr += '```';
-        await message.reply(`${outputStr}`);
+
+        const chart = {
+            type: 'pie',
+            data: {
+                // labels: chartLabels,
+                labels: [],
+                datasets: [
+                    {
+                        data: chartData,
+                        backgroundColor: ["%230074D9", "%23FF4136", "%232ECC40", "%23FF851B", "%237FDBFF", "%23B10DC9", "%23FFDC00", "%23001f3f", "%2339CCCC", "%2301FF70", "%2385144b", "%23F012BE", "%233D9970", "%23111111", "%23AAAAAA"]
+                    }
+                ]
+            }
+        };
+        const chartImgURL = `${quickChartIOHost}${JSON.stringify(chart)}`;
+
+        await message.channel.send(`${outputStr}`);
+        await message.channel.send(`${chartImgURL}`);
 	}
 };
