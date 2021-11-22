@@ -28,10 +28,14 @@ module.exports = {
         // don't use labels
         // const chartLabels = [];
         const chartData = [];
+        let total69s = 0;
+        let latestDate = new Date(1); // epoch
+        let latest69er = '';
 
         let outputStr = '```Top 69ers:\n';
         outputStr += `${'Name'.padEnd(30)}| Count |${'Time Achieved'.padStart(15)}\n`;
-        outputStr += `------------------------------|-------|---------------\n`;
+        const divideLine = `------------------------------|-------|---------------\n`;
+        outputStr += divideLine;
 
         for (let i = 0; i < sixtyNinersArray.length; ++i) {
             const [id, {timestamp, earned}] = sixtyNinersArray[i];
@@ -43,15 +47,13 @@ module.exports = {
 
             const usernameStr = user.username.padEnd(30);
             const earnedStr = `${earned}`.padStart(5);
+            total69s += earned;
             const d = new Date(timestamp);
-            const dateInfoUTC = {
-                month: d.getUTCMonth() + 1 < 10 ? '0' + (d.getUTCMonth() + 1) : d.getUTCMonth() + 1,
-                date: d.getUTCDate() < 10 ? '0' + d.getUTCDate() : d.getUTCDate(),
-                year: `${d.getUTCFullYear()}`.substring(2),
-                hours: d.getUTCHours() < 10 ? '0' + d.getUTCHours() : d.getUTCHours(),
-                minutes: d.getUTCMinutes() < 10 ? '0' + d.getUTCMinutes() : d.getUTCMinutes()
-            };
-            const timeAchievedStr = `${dateInfoUTC.month}/${dateInfoUTC.date}/${dateInfoUTC.year} ${dateInfoUTC.hours}:${dateInfoUTC.minutes}`.padStart(15);
+            if (d > latestDate) {
+                latestDate = d;
+                latest69er =  user.username;
+            }
+            const timeAchievedStr = getDateTimeStringUTC(d).padStart(15);
             outputStr += `${usernameStr}| ${earnedStr} |${timeAchievedStr}\n`;
 
             // push chart variables
@@ -59,6 +61,8 @@ module.exports = {
             chartData.push(`${earned}`);
         }
 
+        outputStr += divideLine;
+        outputStr += `${'Total'.padEnd(30)}| ${`${total69s}`.padStart(5)} | Last 69: ${latest69er} -${getDateTimeStringUTC(latestDate).padStart(15)}`;
         outputStr += '```';
 
         const chart = {
@@ -79,4 +83,15 @@ module.exports = {
         await message.channel.send(`${outputStr}`);
         await message.channel.send(`${chartImgURL}`);
 	}
+};
+
+const getDateTimeStringUTC = (d = new Date()) => {
+    const dateInfoUTC = {
+        month: d.getUTCMonth() + 1 < 10 ? '0' + (d.getUTCMonth() + 1) : d.getUTCMonth() + 1,
+        date: d.getUTCDate() < 10 ? '0' + d.getUTCDate() : d.getUTCDate(),
+        year: `${d.getUTCFullYear()}`.substring(2),
+        hours: d.getUTCHours() < 10 ? '0' + d.getUTCHours() : d.getUTCHours(),
+        minutes: d.getUTCMinutes() < 10 ? '0' + d.getUTCMinutes() : d.getUTCMinutes()
+    };
+    return `${dateInfoUTC.month}/${dateInfoUTC.date}/${dateInfoUTC.year} ${dateInfoUTC.hours}:${dateInfoUTC.minutes}`;
 };

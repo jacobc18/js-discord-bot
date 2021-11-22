@@ -82,9 +82,9 @@ module.exports = {
                         .setDescription('name of playlist to play/queue')
                         .setRequired(true))),
 	async execute(interaction) {
-        const subcommandName = interaction.options.getSubcommand();
+        const subcommandName = interaction?.options?.getSubcommand();
 
-        logger.log(`/PLAYLIST ${subcommandName.toUpperCase()} user: ${interaction.member.user.username} | guild: ${interaction.guildId}`);
+        logger.log(`/PLAYLIST ${subcommandName?.toUpperCase()} user: ${interaction.member.user.username} | guild: ${interaction.guildId}`);
 
         if (subcommandName === 'create') {
             createPlaylist(interaction);
