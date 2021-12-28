@@ -87,6 +87,14 @@ module.exports = {
         if (isYouTubeVideoURL(query)) {
             let splitQuery = query.replace(/(>|<)/gi, '')
                 .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+            
+            if (!splitQuery[2]) {
+                interaction.reply(
+                    'There was an issue processing your request. (Perhaps invalid/unsupported input)'
+                );
+                return;
+            }
+
             const id = splitQuery[2].split(/[^0-9a-z_\-]/i)[0];
 
             const timestampRegex = /t=([^#&\n\r]+)/g;
