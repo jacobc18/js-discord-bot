@@ -4,6 +4,8 @@ const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
 
+const BOT_OWNER_ID = '189181051216592896';
+
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
   // Intents.FLAGS.GUILD_MEMBERS,
@@ -26,13 +28,13 @@ client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.data.name, command);
+  const command = require(`./commands/${file}`);
+  client.commands.set(command.data.name, command);
 }
 
 client.once('ready', () => {
- client.musicPlayerManager = new Map();
- client.guildData = new Collection();
+  client.musicPlayerManager = new Map();
+  client.guildData = new Collection();
 });
 
 client.on('ready', () => {
@@ -43,7 +45,7 @@ client.on('ready', () => {
 client.on('interactionCreate', async interaction => {
   const isButtonInteraction = interaction.isButton();
 
-	if (!interaction.isCommand() && !isButtonInteraction) return;
+  if (!interaction.isCommand() && !isButtonInteraction) return;
 
   let { commandName } = interaction;
 
@@ -57,21 +59,21 @@ client.on('interactionCreate', async interaction => {
       return;
     }
   }
-  
-	if (!client.commands.has(commandName)) return;
 
-	const command = client.commands.get(commandName);
+  if (!client.commands.has(commandName)) return;
 
-	if (!command) return;
+  const command = client.commands.get(commandName);
 
-	try {
-		await client.commands.get(commandName).execute(interaction);
-	} catch (error) {
-		console.error(error);
+  if (!command) return;
+
+  try {
+    await client.commands.get(commandName).execute(interaction);
+  } catch (error) {
+    console.error(error);
     if (interaction.deferred || interaction.replied) {
       return interaction.editReply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
-		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
 
@@ -81,7 +83,7 @@ client.on('messageCreate', async message => {
 
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
-  
+
   if (client.commands.has(command)) {
     await client.commands.get(command).execute(message, splitArgs);
   } else if (command === 'echo') {
@@ -99,6 +101,15 @@ client.on('voiceStateUpdate', (oldState, newState) => {
   } catch (err) {
     console.log(err);
   }
+});
+
+process.on('unhandledRejection', async err => {
+  console.log(err);
+
+  const owner = await client.users.fetch(BOT_OWNER_ID);
+  await owner.send(`${err}`);
+
+  process.exit(0);
 });
 
 client.login(process.env.DISCORD_TOKEN);
