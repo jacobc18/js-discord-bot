@@ -25,6 +25,7 @@ module.exports = {
                 { name: '/playaudio *fileName*', value: 'adds Pastrami to the voice channel and play the audio *filename* specified in the command'},
                 { name: '/speak *text*', value: 'adds Pastrami to the voice channel and play a TTS reading of given *text*'},
                 { name: '/yt *url*', value: 'adds Pastrami to the voice channel and plays the audio corresponding to the YouTube URL provided (queries WIP)' },
+                { name: '!lichess', value: 'lists available !lichess commands' },
                 { name: '!playlist *cmd*', value: 'there are multiple playlist slash commands - go ahead and type "/playlist" to check them out' },
                 { name: '!help | !pastrami', value: 'displays this command list' }
             )
