@@ -1,4 +1,5 @@
 const NODE_ENV = process.env.NODE_ENV;
+const isProduction = NODE_ENV.includes('production');
 
 const fs = require('fs');
 const users = require('../data/users.json');
@@ -55,7 +56,7 @@ module.exports = function(client, oldState, newState) {
     const sixtyNinersData = require('../data/69ers.json');
     const sixtyNinersMemberData = sixtyNinersData[memberId];
 
-    if (sixtyNinersMemberData && NODE_ENV === 'production') {
+    if (sixtyNinersMemberData && isProduction) {
         const timestamp = new Date().getTime();
         const sevenAndAHalfHours = 27000000; // 6 hours and 90 minutes
         if (timestamp - sixtyNinersMemberData.timestamp >= sevenAndAHalfHours && getRandomBetween(1, 69) === 69) {
@@ -71,7 +72,7 @@ module.exports = function(client, oldState, newState) {
             }
             fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
         }
-    } else if (NODE_ENV === 'production') {
+    } else if (isProduction) {
         sixtyNinersData[memberId] = {
             timestamp: new Date().getTime(),
             earned: 0
