@@ -3,7 +3,7 @@
  * to the guilds (servers) which have ids in the `guildIDs` array below
  */
 
-require('dotenv').config();
+require('./utils/getDotenv');
 
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');

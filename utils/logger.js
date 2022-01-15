@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('../utils/getDotenv');
 
 const log = data => {
     if (!process.env.LOGGING) return;

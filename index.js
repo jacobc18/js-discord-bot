@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./utils/getDotenv');
 
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');

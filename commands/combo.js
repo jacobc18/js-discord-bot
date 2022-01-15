@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('../utils/getDotenv');
 const fetch = require('node-fetch');
 const getRandomBetween = require('../utils/getRandomBetween');
 const logger = require('../utils/logger');
