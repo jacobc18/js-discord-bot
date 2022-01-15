@@ -120,7 +120,15 @@ To start the bot locally on your machine run
 $ node index.js
 ```
 
-This will also connect the bot to any guilds you have linked it to via [Discord's Developer Portal](http://discordapp.com/developers/applications).
+This will also connect the bot to any guilds you have linked it to via [Discord's Developer Portal](http://discordapp.com/developers/applications). This is great for bot development.
+
+To start a production version of the bot (windows only) run
+
+```
+$ start.bat
+```
+
+This will set `NODE_ENV` to `production` and restart the bot process on error. This can be terminated with cntrl + C and entering Y or killing the process otherwise.
 
 ### Greetings
 

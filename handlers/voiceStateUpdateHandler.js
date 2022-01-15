@@ -1,3 +1,5 @@
+const NODE_ENV = process.env.NODE_ENV;
+
 const fs = require('fs');
 const users = require('../data/users.json');
 const speakText = require('../utils/speakText');
@@ -53,7 +55,7 @@ module.exports = function(client, oldState, newState) {
     const sixtyNinersData = require('../data/69ers.json');
     const sixtyNinersMemberData = sixtyNinersData[memberId];
 
-    if (sixtyNinersMemberData) {
+    if (sixtyNinersMemberData && NODE_ENV === 'production') {
         const timestamp = new Date().getTime();
         const sevenAndAHalfHours = 27000000; // 6 hours and 90 minutes
         if (timestamp - sixtyNinersMemberData.timestamp >= sevenAndAHalfHours && getRandomBetween(1, 69) === 69) {
@@ -69,7 +71,7 @@ module.exports = function(client, oldState, newState) {
             }
             fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
         }
-    } else {
+    } else if (NODE_ENV === 'production') {
         sixtyNinersData[memberId] = {
             timestamp: new Date().getTime(),
             earned: 0

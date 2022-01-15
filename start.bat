@@ -1,3 +1,3 @@
 :start
-node .
+set NODE_ENV=production&& node .
 goto start
