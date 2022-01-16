@@ -20,7 +20,7 @@ module.exports = {
                 { name: '!69ers', value: 'displays 69ers standings and pie chart' },
                 { name: '!echo *query*', value: 'repeats back given *query*' },
                 { name: '!leave', value: 'forces Pastrami to leave a voice channel if in one' },
-                { name: '!kanye', value: 'gives a Kanye West quote' },
+                { name: '!kanye | !kanyesays', value: 'gives a Kanye West quote' },
                 { name: '/baldies', value: 'will post a wiki link to a random famous person who is currently bald or was bald at any point in their adult life' },
                 { name: '/listaudio', value: 'lists any audio files that are available to be played by Pastrami'},
                 { name: '/playaudio *fileName*', value: 'adds Pastrami to the voice channel and play the audio *filename* specified in the command'},

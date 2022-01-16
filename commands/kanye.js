@@ -10,6 +10,7 @@ module.exports = {
     name: 'kanye',
     type: 'text'
   },
+  aliases: ['kanyesays'],
   async execute(message) {
     const guildId = message.guildId;
 
