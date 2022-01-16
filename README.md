@@ -188,6 +188,7 @@ Pastrami bot offers a handful of commands. You can use these by typing the comma
 |Command|Modifier | Description |
 |:---| :---: | :--- |
 | ```!pastrami``` |```none``` |This command will display a list of all commands in a text channel. Alias: `!help` |
+| ```!kanye``` |```none``` |This command will display a Kanye West quote generated via [Kanye Rest API](https://kanye.rest/) |
 | ```/baldies``` |```none``` |This command will post a wiki link to a random famous person who is currently bald or was bald at any point in their adult life. |
 | ```/listaudio``` |```none``` | This command will list any audio files that are available to be played by Pastrami. The audio files listed will be pulled from the ``` /data/audiofiles``` folder mentioned earlier.|
 | ```/playaudio``` | ```audio-file``` | This command will add Pastrami to the voice channel and play the audio file specified in the command. (Note: the audio file must be stored in ``` /data/audiofiles```) |
