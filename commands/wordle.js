@@ -34,6 +34,11 @@ module.exports = {
   },
   aliases: ['w'],
   async execute(message, args) {
+    // const BOT_OWNER = '189181051216592896';
+    // if (message.author.id !== BOT_OWNER) {
+    //   await message.reply('Pastrami beta Wordle is down right now while some bugs are being worked on. Please try again later! <3');
+    //   return;
+    // }
     const guildId = message.guildId; // null if a DIRECT MESSAGE
     const userId = message.author.id;
 
@@ -83,6 +88,20 @@ module.exports = {
       }
 
       await message.reply(getWordleStatsMessage(lookupId, lookupWordle.stats));
+      return;
+    }
+
+    if (args.length > 0 && (args[0] === 'help' || args[0] === 'commands')) {
+      const embed = getHelpEmbed();
+      if (guildId) {
+        await message.channel.send({
+          embeds: [embed]
+        });
+      } else {
+        await message.author.send({
+          embeds: [embed]
+        });
+      }
       return;
     }
 
@@ -141,26 +160,6 @@ module.exports = {
       }
 
       return;
-    } else if (args[0] === 'help') {
-      const embed = new MessageEmbed()
-        .setColor('#538d4e')
-        .setTitle('!wordle commands')
-        .setURL('https://github.com/jacobc18/js-discord-bot#readme')
-        .setDescription('A full list of !wordle commands. Tip: you can use !w instead of !wordle')
-        .addFields(
-            { name: '!wordle howtoplay', value: 'displays instructions on how to play Wordle' },
-            { name: '!wordle help', value: 'displays this command list' },
-            { name: '!wordle stats', value: 'displays your Wordle stats. Alias: !wordle s' },
-            { name: '!wordle stats *user tag*', value: 'displays the Wordle stats of the given user if they exist. Must be done in a guild channel. Alias: !wordle s *user tag*' },
-            { name: '!wordle guess *guess*', value: 'submits *guess* as a Wordle guess. Only possible if currently in a Wordle game. Alias: !wordle g *guess*' },
-            { name: '!wordle quit', value: 'quits your current Wordle word. This results in a recorded failure. Only possible if currently in a Wordle game' },
-            { name: '!wordle | !wordle start', value: 'starts a Wordle game with today\'s word if you are not currently in one. Otherwise displays helpful info' },
-            { name: '!report *message*', value: 'reports given message to the bot owner. Thanks for your help!' }
-        );
-      await message.author.send({
-        embeds: [embed]
-      });
-      return;
     } else if (args[0] === 'quit') {
       // todo: add an "are you sure?" confirmation message
       const newSolvedScores = userWordle.stats.solvedScores;
@@ -182,6 +181,9 @@ module.exports = {
       });
 
       await message.author.send(`Successfully quit Wordle #${userWordle.answerIdx} and recorded as a failure. The answer was "${userWordle.answer}"`);
+      if (!isProduction) {
+        await message.author.send(`Use **!wordle next** to go to the next word! (QA/BETA ONLY)`);
+      }
       return;
     } else if (args[0] === 'howtoplay') {
       await message.author.send('this message is currently a work in progress. See the official Wordle website for instructions on how to play: https://www.powerlanguage.co.uk/wordle/');
@@ -288,6 +290,9 @@ module.exports = {
         }
 
         await message.author.send(`You guessed the correct word "${userWordle.answer}" in ${numGuesses} guess${numGuesses === 1 ? '' : 'es'}! (use !wordle stats to view your overall stats)`);
+        if (!isProduction) {
+          await message.author.send(`Use **!wordle next** to go to the next word! (QA/BETA ONLY)`);
+        }
       } else if (numGuesses === MAX_GUESSES_ALLOWED) {
         // failed to guess the word :(
         const newSolvedScores = {
@@ -307,6 +312,9 @@ module.exports = {
         }
 
         await message.author.send(`Oh no! You failed to guess the correct word "${userWordle.answer}" in ${MAX_GUESSES_ALLOWED} guesses. (use !wordle stats to view your overall stats)`);
+        if (!isProduction) {
+          await message.author.send(`Use **!wordle next** to go to the next word! (QA/BETA ONLY)`);
+        }
       }
 
       updateJsonFileElementSync(USERS_FILEPATH_FROM_INDEX, users, userId, {
@@ -322,20 +330,22 @@ module.exports = {
 };
 
 const buildKeyboardResultsString = (letterPresences) => {
-  let outputStr = `${CORRECT_EMOJI}: ${letterPresences[CORRECT_LETTER].sort().join('')}\n`;
-  outputStr += `${PRESENT_EMOJI}: ${letterPresences[PRESENT_LETTER].sort().join('')}\n`;
-  outputStr += `${ABSENT_EMOJI}: ${letterPresences[ABSENT_LETTER].sort().join('')}\n`;
-  outputStr += `${UNKNOWN_EMOJI}: ${letterPresences[UNKNOWN_LETTER].sort().join('')}\n`;
+  let outputStr = `${CORRECT_EMOJI} : ${letterPresences[CORRECT_LETTER].sort().join('')}\n`;
+  outputStr += `${PRESENT_EMOJI} : ${letterPresences[PRESENT_LETTER].sort().join('')}\n`;
+  outputStr += `${ABSENT_EMOJI} : ${letterPresences[ABSENT_LETTER].sort().join('')}\n`;
+  outputStr += `${UNKNOWN_EMOJI} : ${letterPresences[UNKNOWN_LETTER].sort().join('')}\n`;
   return outputStr;
 };
 
 const getFullWordleOutputString = (userWordle) => {
-  let outputStr = '```';
+  // let outputStr = '```';
+  let outputStr = '';
   outputStr += `Wordle #${userWordle.answerIdx} ${userWordle.guesses.length}/${MAX_GUESSES_ALLOWED}\n\n`;
   const [fullResultsString, letterPresences] = getAllGuessResultsEmojiStringAndLetterPresences(userWordle);
   outputStr += buildKeyboardResultsString(letterPresences) + '\n';
   outputStr += fullResultsString;
-  return outputStr + '```';
+  // outputStr += '```';
+  return outputStr;
 };
 
 const updateLetterPresences = (currPresences, guess, guessResults) => {
@@ -410,7 +420,7 @@ const getGuessResults = (guess, answer) => {
   for (let i = 0; i < answer.length; ++i) {
     if (guess[i] === answer[i]) {
       results[i] = CORRECT_LETTER;
-      answerLetters.shift();
+      answerLetters.slice(i, 1);
     }
   }
 
@@ -494,3 +504,22 @@ const getWordleStatsMessage = (userId, wordleStats) => {
     embeds: [embed]
   };
 }
+
+const getHelpEmbed = () => {
+  return new MessageEmbed()
+    .setColor('#538d4e')
+    .setTitle('!wordle commands')
+    .setURL('https://github.com/jacobc18/js-discord-bot#readme')
+    .setDescription('A full list of !wordle commands. Tip: you can use !w instead of !wordle')
+    .addFields(
+        { name: '!wordle howtoplay', value: 'displays instructions on how to play Wordle' },
+        { name: '!wordle help', value: 'displays this command list. Alias: !wordle commands' },
+        { name: '!wordle stats', value: 'displays your Wordle stats. Alias: !wordle s' },
+        { name: '!wordle stats *user tag*', value: 'displays the Wordle stats of the given user if they exist. Must be done in a guild channel. Alias: !wordle s *user tag*' },
+        { name: '!wordle guess *guess*', value: 'submits *guess* as a Wordle guess. Only possible if currently in a Wordle game. Alias: !wordle g *guess*' },
+        { name: '!wordle quit', value: 'quits your current Wordle word. This results in a recorded failure. Only possible if currently in a Wordle game' },
+        { name: '!wordle | !wordle start', value: 'starts a Wordle game with today\'s word if you are not currently in one. Otherwise displays helpful info' },
+        { name: '!wordle next', value: 'artificially go to the next day. Use **!wordle** to then start the next Wordle day. Only available if not in a current Wordle and and if not in a production environment.' },
+        { name: '!report *message*', value: 'reports given message to the bot owner. Thanks for your help!' }
+    );
+};
