@@ -11,7 +11,9 @@ module.exports = function readFile(file, lineFunc) {
 
             readInterface
                 .on('line', function (line) {
-                    lineFunc(line);
+                    lineFunc(line, () => {
+                        readInterface.close();
+                    });
                 })
                 .on('close', function () {
                     res();

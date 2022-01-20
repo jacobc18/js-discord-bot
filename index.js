@@ -19,9 +19,12 @@ const client = new Client({ intents: [
   Intents.FLAGS.GUILD_MESSAGES,
   // Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
   // Intents.FLAGS.GUILD_MESSAGE_TYPING,
-  // Intents.FLAGS.DIRECT_MESSAGES,
-  // Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-  // Intents.FLAGS.DIRECT_MESSAGE_TYPING
+  Intents.FLAGS.DIRECT_MESSAGES,
+  Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+  Intents.FLAGS.DIRECT_MESSAGE_TYPING
+],
+partials: [
+    'CHANNEL', // Required to receive DMs
 ]});
 client.commands = new Collection();
 
@@ -89,6 +92,13 @@ client.on('messageCreate', async message => {
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
 
+  if (command === 'report') {
+    const owner = await client.users.fetch(BOT_OWNER_ID);
+    await owner.send(`"${message.content}" FROM ${message.author.username} (${message.author.id})`);
+    message.channel.send('I sent your report! Thank you');
+    return;
+  }
+
   if (client.commands.has(command)) {
     await client.commands.get(command).execute(message, splitArgs);
   } else if (command === 'echo') {
@@ -97,7 +107,9 @@ client.on('messageCreate', async message => {
     } else {
       message.channel.send('Tell me what to say ya bimbus.');
     }
-  } else { message.channel.send('not a valid command'); }
+  } else {
+    message.channel.send('not a valid command');
+  }
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
