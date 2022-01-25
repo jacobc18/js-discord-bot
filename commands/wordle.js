@@ -9,8 +9,8 @@ const logger = require('../utils/logger');
 
 const USERS_FILEPATH_FROM_INDEX = './data/users.json';
 const WORDLE_VALID_GUESSES_FILEPATH = './data/wordle/validguesses.txt';
-// const WORDLE_ANSWERS_FILEPATH = './data/wordle/answers.txt';
-const WORDLE_ANSWERS_FILEPATH = './data/wordle/test_answers.txt';
+const WORDLE_ANSWERS_FILEPATH = './data/wordle/answers.txt';
+// const WORDLE_ANSWERS_FILEPATH = './data/wordle/test_answers.txt'; // for testing
 
 const ABSENT_LETTER = 'absent';
 const PRESENT_LETTER = 'present';
@@ -25,6 +25,7 @@ const UNKNOWN_EMOJI = '❔';
 const MAX_GUESSES_ALLOWED = 6;
 
 const FIRST_WORDLE_DATE = '2021-06-18';
+const BETA_START_DATE = '2022-01-20';
 const DAY_MS = 86400000;
 
 module.exports = {
@@ -39,6 +40,11 @@ module.exports = {
     //   await message.reply('Pastrami beta Wordle is down right now while some bugs are being worked on. Please try again later! <3');
     //   return;
     // }
+
+    if (!isProduction) {
+      await message.reply('Pastrami beta Wordle has been disabled. You can play full release Pastrami Wordle in the Jake Feeds Poros discord server.');
+      return;
+    }
     const guildId = message.guildId; // null if a DIRECT MESSAGE
     const userId = message.author.id;
 
@@ -116,7 +122,10 @@ module.exports = {
     if (!userWordle.answer && (args.length === 0 || args[0] === 'start')) {
       // not on word currently, start a new game
       const wordleDayOne = new Date(FIRST_WORDLE_DATE);
-      const today = new Date();
+      let today = new Date();
+      if (!isProduction) {
+        today = new Date(BETA_START_DATE);
+      }
       let answerWordleIdx = Math.floor((today - wordleDayOne)  / DAY_MS);
 
       // add offset if not in production
