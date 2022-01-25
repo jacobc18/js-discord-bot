@@ -28,6 +28,8 @@ module.exports = {
                 { name: '/yt *url*', value: 'adds Pastrami to the voice channel and plays the audio corresponding to the YouTube URL provided (queries WIP)' },
                 { name: '!lichess', value: 'lists available !lichess commands' },
                 { name: '!playlist *cmd*', value: 'there are multiple playlist slash commands - go ahead and type "/playlist" to check them out' },
+                { name: '!report *message*', value: 'Reports *message* (a bug or comment) to the bot owner. Thanks for your help!' },
+                { name: '!wordle', value: 'displays info on how to play Wordle with Pastrami' },
                 { name: '!help | !pastrami', value: 'displays this command list' }
             )
 

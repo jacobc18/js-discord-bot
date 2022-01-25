@@ -196,6 +196,8 @@ Pastrami bot offers a handful of commands. You can use these by typing the comma
 | ```/speak``` |```text-string``` | This command will add Pastrami to the voice channel and play a TTS reading of the text string specified in the command.|
 | ```/yt ``` |```youtube-url```| This command will add Pastrami to the voice channel and play the audio corresponding to the YouTube link specified in the command.|
 | ```!lichess ``` |```none```| This command will lists available !lichess commands.|
+| ```!wordle``` |```none``` | This command will display information on how to play Wordle with Pastrami.|
+| ```!report``` |```text-string``` | This command will report the given text-string (a bug or comment ideally) to the bot owner.|
 
 ## Contributions 
 
