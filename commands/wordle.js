@@ -93,7 +93,10 @@ module.exports = {
         throw new Error(`no wordle status for user: ${lookupId}`);
       }
 
-      await message.reply(getWordleStatsMessage(lookupId, lookupWordle.stats));
+      if (guildId) {
+        await message.channel.send(getWordleStatsMessage(lookupId, lookupWordle.stats));
+      }
+      await message.author.send(getWordleStatsMessage(lookupId, lookupWordle.stats));
       return;
     }
 
