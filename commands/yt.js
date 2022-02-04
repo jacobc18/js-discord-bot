@@ -61,6 +61,8 @@ module.exports = {
 
         let query = interaction.options.getString('query');
 
+        await interaction.channel.send(`${query}`);
+
         const querySplit = query.split(' ');
         const shuffleFlag = querySplit[querySplit.length - 1] === '-s' || querySplit[querySplit.length - 1] === '-shuffle'
 
