@@ -64,7 +64,7 @@ module.exports = function(client, oldState, newState) {
             randomMemberGreeting = '*NAME* has earned the right to 69 with me'
                 .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
             if (sixtyNinersMemberData.earned > 0) {
-                randomMemberGreeting += ` ${sixtyNinersMemberData.earned + 1} times`;
+                randomMemberGreeting += ` ${sixtyNinersMemberData.earned + 1} times.`;
             }
             sixtyNinersData[memberId] = {
                 timestamp,
@@ -87,6 +87,26 @@ module.exports = function(client, oldState, newState) {
         connectAndPlayAudioFile(channel, `${AUDIOFILES_DIR_PATH}/${audioFileName}`);
         return;
     }
+
+    const total69s = getTotal69s();
+    if (total69s % 69 === 0) {
+        randomMemberGreeting += ' That\'s a MEGA 69 baby!'
+    }
     
     speakText(channel, randomMemberGreeting);
+};
+
+const getTotal69s = () => {
+    const sixtyNinersData = require('../data/69ers.json');
+    const sixtyNinersArray = [...Object.entries(sixtyNinersData)];
+
+    let total = 0;
+    for (let i = 0; i < sixtyNinersArray.length; ++i) {
+        const [id, {timestamp, earned}] = sixtyNinersArray[i];
+
+        console.log(earned);
+        total += earned;
+    }
+
+    return total;
 };
