@@ -117,7 +117,6 @@ const getTotal69s = () => {
     for (let i = 0; i < sixtyNinersArray.length; ++i) {
         const [id, {timestamp, cooldownEnds, earned}] = sixtyNinersArray[i];
 
-        console.log(earned);
         total += earned;
     }
 
