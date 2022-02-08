@@ -22,16 +22,20 @@ module.exports = {
         }
 
         const todayTimestamp = new Date().getTime();
-        const diffInSec = (todayTimestamp - user69Data.cooldownEnds) / 1000;
+        let diffInSec = (todayTimestamp - user69Data.cooldownEnds) / 1000;
 
         if (diffInSec >= 0) {
             await message.reply(`You are currently eligible to earn a 69!`);
             return;
         }
 
-        // gets the time difference in the form HH:MM:SS
-        const timeString = new Date(diffInSec * 1000).toISOString().substring(11, 8);
+        diffInSec *= -1;
+        const hours = Math.floor(diffInSec /  3600);
+        diffInSec %= 3600;
+        const minutes = Math.floor(diffInSec / 60);
+        const seconds = diffInSec % 60;
+        const timestring = `${hours ? `${hours}h ` : ''}${minutes ? `${minutes}m ` : ''}${seconds ? `${seconds.toFixed()}s` : ''}`;
 
-        await message.reply(`You will be eligible for another in ${timeString} (HH:MM:SS)`);
+        await message.reply(`You will be eligible for another 69 in ${timestring}`);
     }
 };
