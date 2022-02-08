@@ -55,20 +55,33 @@ module.exports = function(client, oldState, newState) {
     // handle rare greeting
     const sixtyNinersData = require('../data/69ers.json');
     const sixtyNinersMemberData = sixtyNinersData[memberId];
+    
+    let memberEarned69 = false;
 
     if (sixtyNinersMemberData && isProduction) {
         const timestamp = new Date().getTime();
         const sevenAndAHalfHours = 27000000; // 6 hours and 90 minutes
-        if (timestamp - sixtyNinersMemberData.timestamp >= sevenAndAHalfHours && getRandomBetween(1, 69) === 69) {
+        const cooldownEndsTimestamp = sixtyNinersMemberData.cooldownEnds;
+        const isEligible = timestamp - cooldownEndsTimestamp >= 0;
+        if (isEligible && getRandomBetween(1, 69) === 69) {
             // member hit the rare greeting!
+            memberEarned69 = true;
             randomMemberGreeting = '*NAME* has earned the right to 69 with me'
                 .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
             if (sixtyNinersMemberData.earned > 0) {
-                randomMemberGreeting += ` ${sixtyNinersMemberData.earned + 1} times`;
+                randomMemberGreeting += ` ${sixtyNinersMemberData.earned + 1} times.`;
             }
             sixtyNinersData[memberId] = {
                 timestamp,
+                cooldownEnds: timestamp + sevenAndAHalfHours,
                 earned: sixtyNinersMemberData.earned + 1
+            }
+            fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
+        } else if (isEligible) {
+            // missed
+            sixtyNinersData[memberId] = {
+                ...sixtyNinersData[memberId],
+                cooldownEnds: timestamp + sevenAndAHalfHours
             }
             fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
         }
@@ -87,6 +100,26 @@ module.exports = function(client, oldState, newState) {
         connectAndPlayAudioFile(channel, `${AUDIOFILES_DIR_PATH}/${audioFileName}`);
         return;
     }
+
+    const total69s = getTotal69s();
+    if (memberEarned69 && total69s % 69 === 0) {
+        randomMemberGreeting += ' That\'s a MEGA 69 baby!'
+    }
     
     speakText(channel, randomMemberGreeting);
+};
+
+const getTotal69s = () => {
+    const sixtyNinersData = require('../data/69ers.json');
+    const sixtyNinersArray = [...Object.entries(sixtyNinersData)];
+
+    let total = 0;
+    for (let i = 0; i < sixtyNinersArray.length; ++i) {
+        const [id, {timestamp, cooldownEnds, earned}] = sixtyNinersArray[i];
+
+        console.log(earned);
+        total += earned;
+    }
+
+    return total;
 };
