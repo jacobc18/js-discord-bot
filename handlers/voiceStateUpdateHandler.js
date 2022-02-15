@@ -103,7 +103,7 @@ module.exports = function(client, oldState, newState) {
 
     const total69s = getTotal69s();
     if (memberEarned69 && total69s % 69 === 0) {
-        randomMemberGreeting += ' That\'s a MEGA 69 baby!'
+        randomMemberGreeting += ' That\'s a MEGA 69 baby!';
     }
     
     speakText(channel, randomMemberGreeting);

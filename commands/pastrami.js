@@ -18,6 +18,7 @@ module.exports = {
             .addFields(
                 // { name: '\u200B', value: '\u200B' }, blank field
                 { name: '!69ers', value: 'displays 69ers standings and pie chart' },
+                { name: '!cd | !cooldown', value: 'displays your 69er chance cooldown' },
                 { name: '!echo *query*', value: 'repeats back given *query*' },
                 { name: '!leave', value: 'forces Pastrami to leave a voice channel if in one' },
                 { name: '!kanye | !kanyesays', value: 'gives a Kanye West quote' },

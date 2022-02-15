@@ -7,6 +7,7 @@ module.exports = {
         name: 'cd',
         type: 'text'
     },
+    aliases: ['cooldown'],
     async execute(message) {
         const guildId = message.guildId;
         const userId = message.author.id;
