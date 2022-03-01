@@ -3,6 +3,6 @@
     "maxQueueLength": 100,
     "leaveTimeout": 90,
     "maxResponseTime": 30,
-    "maxVideoPlayLengthMinutes": 120,
+    "maxVideoPlayLengthMinutes": 240,
     "maxNumPlaylistsPerUser": 10
 }
