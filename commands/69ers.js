@@ -1,3 +1,5 @@
+const { getUsers: apiGetUsers } = require('../services/pastramiApi')
+
 const logger = require('../utils/logger');
 
 const quickChartIOHost = 'https://quickchart.io/chart?c=';
@@ -12,8 +14,11 @@ module.exports = {
 
         logger.log(`!69ERS user: ${message.member.user.username} | guildId: ${guildId}`);
 
-        const sixtyNinersData = require('../data/69ers.json');
-        const sixtyNinersArray = [...Object.entries(sixtyNinersData)];
+        const users = await apiGetUsers();
+        const sixtyNinersArray = users.map(userData => {
+            return [userData.discordId, userData.sixtyNineData];
+        });
+
         sixtyNinersArray.sort((a, b) => {
             const aEarned = a[1].earned;
             const bEarned = b[1].earned;

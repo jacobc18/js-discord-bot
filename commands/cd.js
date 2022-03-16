@@ -1,6 +1,8 @@
-const logger = require('../utils/logger');
+const {
+    getUser69Check: apiGetUser69Check
+} = require('../services/pastramiApi');
 
-const sevenAndAHalfHours = 27000000; // 6 hours and 90 minutes
+const logger = require('../utils/logger');
 
 module.exports = {
     data: {
@@ -14,10 +16,8 @@ module.exports = {
 
         logger.log(`!CD user: ${message.member.user.username} | guildId: ${guildId}`);
 
-        const sixtyNinersData = require('../data/69ers.json');
-        const user69Data = sixtyNinersData[userId];
-
-        if (!user69Data) {
+        const user69Data = await apiGetUser69Check(userId);
+        if (user69Data.error) {
             await message.reply('I don\'t have any 69er data for you. Try joining a voice channel first. ');
             throw new Error(`no 69er data for userId: ${userId}`)
         }
