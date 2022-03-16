@@ -39,8 +39,21 @@ const getTotal69s = async(discordId) => {
   }
 };
 
+const postNewUser = async(discordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
+      method: 'POST'
+    });
+
+    return await response.json();
+  } catch (err) {
+    logger.log(err);
+  }
+};
+
 module.exports = {
   getUsers,
   getUser69Check,
-  getTotal69s
+  getTotal69s,
+  postNewUser
 }

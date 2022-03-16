@@ -9,7 +9,8 @@ const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
 const createGuildData = require('../utils/createGuildData');
 const {
     getUser69Check: apiGetUser69Check,
-    getTotal69s: apiGetTotal69s
+    getTotal69s: apiGetTotal69s,
+    postNewUser: apiPostNewUser
 } = require('../services/pastramiApi')
 const logger = require('../utils/logger');
 
@@ -58,7 +59,18 @@ module.exports = async function(client, oldState, newState) {
     let memberEarned69 = false;
 
     if (isProduction) {
-        const user69Check = await apiGetUser69Check(memberId);
+        let user69Check = await apiGetUser69Check(memberId);
+        if (user69Check.error) {
+            // create new user
+            const newUserResult = await apiPostNewUser(memberId);
+            if (newUserResult.error) {
+                throw new Error(newUserResult.error);
+            }
+            user69Check = await apiGetUser69Check(memberId);
+            if (user69Check.error) {
+                throw new Error(user69Check.error);
+            }
+        }
         if (user69Check.hit) {
             // member hit the rare greeting!
             memberEarned69 = true;
@@ -78,9 +90,11 @@ module.exports = async function(client, oldState, newState) {
         return;
     }
 
-    const { total69s } = await apiGetTotal69s();
-    if (memberEarned69 && total69s % 69 === 0) {
-        randomMemberGreeting += ' That\'s a MEGA 69 baby!';
+    if (isProduction) {
+        const { total69s } = await apiGetTotal69s();
+        if (memberEarned69 && total69s % 69 === 0) {
+            randomMemberGreeting += ' That\'s a MEGA 69 baby!';
+        }
     }
     
     speakText(channel, randomMemberGreeting);
