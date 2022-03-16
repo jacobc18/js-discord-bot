@@ -11,6 +11,8 @@ const logger = require('../utils/logger');
 
 const AUDIOFILES_DIR_PATH = './data/audioFiles';
 
+const BOT_OWNER_ID = '189181051216592896';
+
 module.exports = function(client, oldState, newState) {
     if (newState.id === process.env.CLIENT_ID) return;
   
@@ -77,6 +79,9 @@ module.exports = function(client, oldState, newState) {
                 earned: sixtyNinersMemberData.earned + 1
             }
             fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
+
+            const owner = await client.users.fetch(BOT_OWNER_ID);
+            await owner.send(`${memberId} just hit a 69! new count: ${sixtyNinersMemberData.earned + 1}`);
         } else if (isEligible) {
             // missed
             sixtyNinersData[memberId] = {
