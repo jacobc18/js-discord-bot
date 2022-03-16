@@ -57,12 +57,12 @@ module.exports = async function(client, oldState, newState) {
     // handle rare greeting
     const sixtyNinersData = require('../data/69ers.json');
     const sixtyNinersMemberData = sixtyNinersData[memberId];
+    const sevenAndAHalfHours = 27000000; // 6 hours and 90 minutes
     
     let memberEarned69 = false;
 
     if (sixtyNinersMemberData && isProduction) {
         const timestamp = new Date().getTime();
-        const sevenAndAHalfHours = 27000000; // 6 hours and 90 minutes
         const cooldownEndsTimestamp = sixtyNinersMemberData.cooldownEnds;
         const isEligible = timestamp - cooldownEndsTimestamp >= 0;
         if (isEligible && getRandomBetween(1, 69) === 69) {
@@ -93,7 +93,8 @@ module.exports = async function(client, oldState, newState) {
     } else if (isProduction) {
         sixtyNinersData[memberId] = {
             timestamp: new Date().getTime(),
-            earned: 0
+            earned: 0,
+            cooldownEnds: (new Date().getTime()) + sevenAndAHalfHours,
         }
         fs.writeFileSync('./data/69ers.json', JSON.stringify(sixtyNinersData, null, 2));
     }
