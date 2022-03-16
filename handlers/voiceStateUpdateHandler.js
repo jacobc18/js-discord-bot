@@ -13,7 +13,7 @@ const AUDIOFILES_DIR_PATH = './data/audioFiles';
 
 const BOT_OWNER_ID = '189181051216592896';
 
-module.exports = function(client, oldState, newState) {
+module.exports = async function(client, oldState, newState) {
     if (newState.id === process.env.CLIENT_ID) return;
   
     if (oldState.channelId === newState.channelId) return;

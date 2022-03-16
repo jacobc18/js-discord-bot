@@ -112,9 +112,9 @@ client.on('messageCreate', async message => {
   }
 });
 
-client.on('voiceStateUpdate', (oldState, newState) => {
+client.on('voiceStateUpdate', async (oldState, newState) => {
   try {
-    voiceStateUpdateHandler(client, oldState, newState);
+    await voiceStateUpdateHandler(client, oldState, newState);
   } catch (err) {
     console.log(err);
   }
