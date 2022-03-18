@@ -61,13 +61,18 @@ module.exports = async function(client, oldState, newState) {
     if (isProduction) {
         let user69Check = await apiGetUser69Check(memberId);
         if (user69Check.error) {
+            await sendBotOwnerDM(client, `69 check failed for ${memberId}, err: ${user69Check.error}`);
             // create new user
             const newUserResult = await apiPostNewUser(memberId);
             if (newUserResult.error) {
+                await sendBotOwnerDM(client, `new user creation failed for ${memberId}, err: ${newUserResult.error}`);
+
                 throw new Error(newUserResult.error);
             }
             user69Check = await apiGetUser69Check(memberId);
             if (user69Check.error) {
+                await sendBotOwnerDM(client, `69 check 2 failed for ${memberId}, err: ${user69Check.error}`);
+
                 throw new Error(user69Check.error);
             }
         }
@@ -98,4 +103,11 @@ module.exports = async function(client, oldState, newState) {
     }
     
     speakText(channel, randomMemberGreeting);
+};
+
+const sendBotOwnerDM = async (client, msg) => {
+    const BOT_OWNER_ID = '189181051216592896';
+
+    const owner = await client.users.fetch(BOT_OWNER_ID);
+    await owner.send(msg);
 };
