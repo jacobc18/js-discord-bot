@@ -1,4 +1,3 @@
-const createGuildData = require('../utils/createGuildData');
 const logger = require('../utils/logger');
 
 const BOT_OWNER_ID = '189181051216592896';
@@ -19,9 +18,6 @@ module.exports = {
     const guildId = message.guildId;
 
     logger.log(`!TEST user: ${message.member.user.username} | guildId: ${guildId}`);
-
-    const guildData = await createGuildData(guildId);
-    console.log(guildData);
 
     await message.reply('test cmd executed successfully');
   }
