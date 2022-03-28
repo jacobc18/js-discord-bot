@@ -328,7 +328,7 @@ const deletePlaylist = async interaction => {
 
 const playPlaylist = async interaction => {
     if (!interaction.client.guildData.get(interaction.guildId)) {
-        interaction.client.guildData.set(interaction.guildId, createGuildData(interaction.guildId));
+        interaction.client.guildData.set(interaction.guildId, await createGuildData(interaction.guildId));
     }
 
     const nameInput = interaction.options.getString('name');

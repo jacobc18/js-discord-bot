@@ -46,7 +46,7 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         if (!interaction.client.guildData.get(interaction.guildId)) {
-            interaction.client.guildData.set(interaction.guildId, createGuildData(interaction.guildId));
+            interaction.client.guildData.set(interaction.guildId, await createGuildData(interaction.guildId));
         }
 
         const channelId = interaction.member.voice.channelId;

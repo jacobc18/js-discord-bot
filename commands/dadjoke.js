@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const { MessageEmbed } = require('discord.js');
 const logger = require('../utils/logger');
 
 const DAD_JOKE_API_URL = 'https://icanhazdadjoke.com/';

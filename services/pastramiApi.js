@@ -27,7 +27,7 @@ const getUser69Check = async(discordId) => {
   }
 };
 
-const getTotal69s = async(discordId) => {
+const getTotal69s = async() => {
   try {
     const response = await fetch(`${PASTRAMI_API_ENDPOINT}/69s`, {
       method: 'GET'
@@ -51,9 +51,22 @@ const postNewUser = async(discordId) => {
   }
 };
 
+const getGuild = async (guildDiscordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/guilds/${guildDiscordId}`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    logger.log(err);
+  }
+};
+
 module.exports = {
   getUsers,
   getUser69Check,
   getTotal69s,
-  postNewUser
+  postNewUser,
+  getGuild
 }

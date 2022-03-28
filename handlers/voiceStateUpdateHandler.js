@@ -1,12 +1,12 @@
 const NODE_ENV = process.env.NODE_ENV;
 const isProduction = NODE_ENV.includes('production');
 
-const fs = require('fs');
 const users = require('../data/users.json');
 const speakText = require('../utils/speakText');
 const getRandomBetween = require('../utils/getRandomBetween');
 const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
 const createGuildData = require('../utils/createGuildData');
+const sendBotOwnerDM = require('../utils/sendBotOwnerDM');
 const {
     getUser69Check: apiGetUser69Check,
     getTotal69s: apiGetTotal69s,
@@ -43,7 +43,7 @@ module.exports = async function(client, oldState, newState) {
     const memberData = users[memberId];
 
     if (!client.guildData.get(newState.guild.id)) {
-        client.guildData.set(newState.guild.id, createGuildData(newState.guild.id));
+        client.guildData.set(newState.guild.id, await createGuildData(newState.guild.id));
     }
 
     const guildData = client.guildData.get(newState.guild.id);
@@ -103,11 +103,4 @@ module.exports = async function(client, oldState, newState) {
     }
     
     speakText(channel, randomMemberGreeting);
-};
-
-const sendBotOwnerDM = async (client, msg) => {
-    const BOT_OWNER_ID = '189181051216592896';
-
-    const owner = await client.users.fetch(BOT_OWNER_ID);
-    await owner.send(msg);
 };

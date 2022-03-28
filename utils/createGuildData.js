@@ -1,13 +1,18 @@
-const guildConfigs = require('../config/guild.json');
+const {
+    getGuild: apiGetGuild
+} = require('../services/pastramiApi');
+
+const logger = require('../utils/logger');
 
 const defaultGuildGreetings = [
     'welcome *NAME*'
 ];
 
-module.exports = function(guildId) {
-    let guildConfig = {};
-    if (guildId && guildConfigs[guildId]) {
-        guildConfig = guildConfigs[guildId];
+module.exports = async function(guildId) {
+    let guildConfig = await apiGetGuild(guildId);
+    if (guildConfig.error) {
+        logger.log(`CALL createGuildData ERROR guildId: ${guildId}`);
+        guildConfig = {};
     }
     return {
         queueHistory: [],

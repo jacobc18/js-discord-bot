@@ -1,4 +1,4 @@
-const { getUsers: apiGetUsers } = require('../services/pastramiApi')
+const { getUsers: apiGetUsers } = require('../services/pastramiApi');
 
 const logger = require('../utils/logger');
 

@@ -2,9 +2,9 @@ require('./utils/getDotenv');
 
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
 
-const BOT_OWNER_ID = '189181051216592896';
+const sendBotOwnerDM = require('./utils/sendBotOwnerDM');
+const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -93,8 +93,7 @@ client.on('messageCreate', async message => {
   const command = splitArgs.shift().substring(1);
 
   if (command === 'report') {
-    const owner = await client.users.fetch(BOT_OWNER_ID);
-    await owner.send(`"${message.content}" FROM ${message.author.username} (${message.author.id})`);
+    await sendBotOwnerDM(client, `"${message.content}" FROM ${message.author.username} (${message.author.id})`);
     message.channel.send('I sent your report! Thank you');
     return;
   }
@@ -122,9 +121,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 
 process.on('unhandledRejection', async err => {
   console.log(err);
-
-  const owner = await client.users.fetch(BOT_OWNER_ID);
-  await owner.send(`${err}`);
+  await sendBotOwnerDM(client, `${err}`);
 
   process.exit(0);
 });
