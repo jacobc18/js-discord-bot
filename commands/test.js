@@ -19,6 +19,8 @@ module.exports = {
 
     logger.log(`!TEST user: ${message.member.user.username} | guildId: ${guildId}`);
 
+    console.log('test code here');
+
     await message.reply('test cmd executed successfully');
   }
 };

@@ -188,6 +188,7 @@ Pastrami bot offers a handful of commands. You can use these by typing the comma
 |Command|Modifier | Description |
 |:---| :---: | :--- |
 | ```!pastrami``` |```none``` |This command will display a list of all commands in a text channel. Alias: `!help` |
+| ```!guild``` |```none``` |This command will display information about the guild |
 | ```!kanye``` |```none``` |This command will display a Kanye West quote generated via [Kanye Rest API](https://kanye.rest/). Alias: `!kanyesays`|
 | ```!dadjoke``` |```none``` |This command will display a random dad joke via [icanhazdadjoke.com](https://icanhazdadjoke.com/). |
 | ```!69ers``` |```none``` |This command will display the list of 69ers and their 69 counts. |
