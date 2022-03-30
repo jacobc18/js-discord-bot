@@ -21,7 +21,7 @@ module.exports = {
     logger.log(`!GUILD ${args.length > 0 ? args[0] : ''} user: ${message.member.user.username} | guildId: ${message.guildId}`);
 
     if (!isDiscordId(guildId)) {
-      await message.reply(`invalid discord guild id: ${guildId}`);
+      await message.channel.send(`invalid discord guild id: ${guildId}`);
       return;
     }
 

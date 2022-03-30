@@ -14,33 +14,33 @@ module.exports = {
         logger.log(`!PAUSE user: ${message.member.user.username} | guildId: ${guildId}`);
 
         if (!musicPlayer) {
-            await message.reply('there is no audio being played right now');
+            await message.channel.send('there is no audio being played right now');
             return;
         }
 
         if (!voiceChannel) {
-            await message.reply('you must first join a voice channel');
+            await message.channel.send('you must first join a voice channel');
             return;
         }
 
         if (musicPlayer.audioPlayer.state.status == AudioPlayerStatus.Paused) {
-            await message.reply('the current track is already paused!');
+            await message.channel.send('the current track is already paused!');
             return;
         }
 
         if (voiceChannel.id !== message.guild.me.voice.channel.id) {
-            await message.reply('You must be in the same voice channel as the bot (me) in order to pause');
+            await message.channel.send('You must be in the same voice channel as the bot (me) in order to pause');
         }
 
         const success = musicPlayer.audioPlayer.pause();
 
         if (success) {
-            // message.reply(':pause_button: Track was paused. Use !resume to unpause');
+            // message.channel.send(':pause_button: Track was paused. Use !resume to unpause');
             // await message.deleteReply();
             return;
         }
 
         // unsuccessful
-        await message.reply('I was unable to pause this song due to an error');
+        await message.channel.send('I was unable to pause this song due to an error');
 	}
 };

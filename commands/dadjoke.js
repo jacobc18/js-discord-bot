@@ -15,7 +15,7 @@ module.exports = {
 
     const dadJokeData = await getDadJokeData();
 
-    await message.reply(dadJokeData.joke);
+    await message.channel.send(dadJokeData.joke);
   }
 };
 

@@ -27,7 +27,7 @@ module.exports = {
           { name: '!lichess *username*', value: 'displays rating for given user' }
       )
 
-      await message.reply({
+      await message.channel.send({
         embeds: [embed]
       });
       return;
@@ -37,7 +37,7 @@ module.exports = {
       const userData = await getLichessPublicUserInfo(username);
 
       if (!userData) {
-        await message.reply(`unable to find user ${username} via Lichess API`);
+        await message.channel.send(`unable to find user ${username} via Lichess API`);
         return;
       }
 
@@ -65,13 +65,13 @@ module.exports = {
 
       addPlayTimesToEmbed(embed, playTime);
 
-      await message.reply({
+      await message.channel.send({
         embeds: [embed]
       });
       return;
     }
 
-    await message.reply('Unkown !lichess command. Try !lichess *username*');
+    await message.channel.send('Unkown !lichess command. Try !lichess *username*');
   }
 };
 

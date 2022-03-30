@@ -7,7 +7,7 @@ module.exports = {
     },
     async execute(message) {
         logger.log(`!RESTART user: ${message.member.user.username} | guildId: ${message.guildId}`);
-        await message.reply('restarting myself...');
+        await message.channel.send('restarting myself...');
 
         throw new Error(`restart initiated by ${message.member.user.username}`)
     }

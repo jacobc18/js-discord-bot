@@ -10,7 +10,7 @@ module.exports = {
   async execute(message) {
     const userId = message.author.id;
     if (userId !== BOT_OWNER_ID) {
-      await message.reply('command is not available to you');
+      await message.channel.send('command is not available to you');
       return;
     }
 
@@ -21,6 +21,6 @@ module.exports = {
 
     console.log('test code here');
 
-    await message.reply('test cmd executed successfully');
+    await message.channel.send('test cmd executed successfully');
   }
 };

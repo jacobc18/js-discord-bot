@@ -18,7 +18,7 @@ module.exports = {
 
         const user69Data = await apiGetUser69Check(userId);
         if (user69Data.error) {
-            await message.reply('I don\'t have any 69er data for you. Try joining a voice channel first. ');
+            await message.channel.send('I don\'t have any 69er data for you. Try joining a voice channel first. ');
             throw new Error(`no 69er data for userId: ${userId}`)
         }
 
@@ -26,7 +26,7 @@ module.exports = {
         let diffInSec = (todayTimestamp - user69Data.cooldownEnds) / 1000;
 
         if (diffInSec >= 0) {
-            await message.reply(`You are currently eligible to earn a 69!`);
+            await message.channel.send(`You are currently eligible to earn a 69!`);
             return;
         }
 
@@ -37,6 +37,6 @@ module.exports = {
         const seconds = diffInSec % 60;
         const timestring = `${hours ? `${hours}h ` : ''}${minutes ? `${minutes}m ` : ''}${seconds ? `${seconds.toFixed()}s` : ''}`;
 
-        await message.reply(`You will be eligible for another 69 in ${timestring}`);
+        await message.channel.send(`You will be eligible for another 69 in ${timestring}`);
     }
 };

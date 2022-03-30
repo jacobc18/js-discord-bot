@@ -25,7 +25,7 @@ module.exports = {
       .setDescription(`"${quote}"`)
       .setThumbnail(KANYE_IMAGE_URL);
 
-    await message.reply({
+    await message.channel.send({
       embeds: [embed]
     });
   }

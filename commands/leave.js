@@ -11,12 +11,12 @@ module.exports = {
         const voiceChannel = message.member.voice.channel;
 
         if (!audioPlayer) {
-            await message.reply('there is no audio being played right now');
+            await message.channel.send('there is no audio being played right now');
             return;
         }
 
         if (!voiceChannel) {
-            await message.reply('you must first join a voice channel');
+            await message.channel.send('you must first join a voice channel');
             return;
         }
 
@@ -27,6 +27,6 @@ module.exports = {
 
         logger.log(`!LEAVE user: ${message.member.user.username} | guildId: ${guildId}`);
 
-        await message.reply('left the voice channel');
+        await message.channel.send('left the voice channel');
     }
 };

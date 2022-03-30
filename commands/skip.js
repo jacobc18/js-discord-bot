@@ -13,17 +13,17 @@ module.exports = {
         logger.log(`!SKIP user: ${message.member.user.username} | guildId: ${guildId}`);
 
         if (!musicPlayer) {
-            await message.reply('there is no audio being played right now');
+            await message.channel.send('there is no audio being played right now');
             return;
         }
 
         if (!voiceChannel) {
-            await message.reply('you must first join a voice channel');
+            await message.channel.send('you must first join a voice channel');
             return;
         }
 
         if (voiceChannel.id !== message.guild.me.voice.channel.id) {
-            await message.reply('You must be in the same voice channel as the bot (me) in order to skip');
+            await message.channel.send('You must be in the same voice channel as the bot (me) in order to skip');
             return;
         }
 
@@ -34,12 +34,12 @@ module.exports = {
             musicPlayer.connection.destroy();
             message.client.musicPlayerManager.delete(guildId);
 
-            await message.reply(`skipped track entitled: "${skippedTrack.title}", which ended the queue, and left the voice channel`);
+            await message.channel.send(`skipped track entitled: "${skippedTrack.title}", which ended the queue, and left the voice channel`);
             return;
         }
 
         musicPlayer.audioPlayer.stop();
 
-        await message.reply(`skipped track entitled: ${skippedTrack.title}`);
+        await message.channel.send(`skipped track entitled: ${skippedTrack.title}`);
 	}
 };

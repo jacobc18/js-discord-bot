@@ -37,12 +37,12 @@ module.exports = {
   async execute(message, args) {
     // const BOT_OWNER = '189181051216592896';
     // if (message.author.id !== BOT_OWNER) {
-    //   await message.reply('Pastrami beta Wordle is down right now while some bugs are being worked on. Please try again later! <3');
+    //   await message.channel.send('Pastrami beta Wordle is down right now while some bugs are being worked on. Please try again later! <3');
     //   return;
     // }
 
     if (!isProduction) {
-      await message.reply('Pastrami beta Wordle has been disabled. You can play full release Pastrami Wordle in the Jake Feeds Poros discord server.');
+      await message.channel.send('Pastrami beta Wordle has been disabled. You can play full release Pastrami Wordle in the Jake Feeds Poros discord server.');
       return;
     }
     const guildId = message.guildId; // null if a DIRECT MESSAGE
@@ -82,14 +82,14 @@ module.exports = {
       }
 
       if (!users[lookupId] || !users[lookupId].wordle) {
-        await message.reply(`User <@!${lookupId}> does not have any wordle stats!`);
+        await message.channel.send(`User <@!${lookupId}> does not have any wordle stats!`);
         return;
       }
 
       const lookupWordle = users[lookupId].wordle;
       if (!lookupWordle.stats) {
         // this should not happen
-        await message.reply(`User <@!${lookupId}> does not have any wordle stats! (ERROR)`);
+        await message.channel.send(`User <@!${lookupId}> does not have any wordle stats! (ERROR)`);
         throw new Error(`no wordle status for user: ${lookupId}`);
       }
 
@@ -115,7 +115,7 @@ module.exports = {
     }
 
     if (guildId) {
-      await message.reply('To play Wordle send !wordle as a direct message to me');
+      await message.channel.send('To play Wordle send !wordle as a direct message to me');
       return;
     }
 
