@@ -108,7 +108,7 @@ const addPlayTimesToEmbed = (embed, playTime) => {
   for (let field of playTimeFields) {
     const playTimeVal = playTime[field];
     if (playTimeVal) {
-      embed.addField(`${capitalizeFirstLetter(field)} Time Played`, `${playTimeVal}s`, true);
+      embed.addField(`${field === 'tv' ? 'TV' : capitalizeFirstLetter(field)} Time Played`, `${playTimeVal}s`, true);
     }
   }
 };
