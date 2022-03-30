@@ -10,6 +10,7 @@ module.exports = {
     name: 'guild',
     type: 'text'
   },
+  aliases: ['server'],
   async execute(message, args) {
     let guildId = message.guildId;
 

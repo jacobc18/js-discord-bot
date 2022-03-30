@@ -18,7 +18,7 @@ module.exports = {
             .addFields(
                 // { name: '\u200B', value: '\u200B' }, blank field
                 { name: '!69ers', value: 'displays 69ers standings and pie chart' },
-                { name: '!guild *guildId*', value: 'displays guild info; input is current guild by default' },
+                { name: '!guild | !server *guildId*', value: 'displays guild info; input is current guild by default' },
                 { name: '!cd | !cooldown', value: 'displays your 69er chance cooldown' },
                 { name: '!echo *query*', value: 'repeats back given *query*' },
                 { name: '!leave', value: 'forces Pastrami to leave a voice channel if in one' },

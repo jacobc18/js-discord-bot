@@ -42,11 +42,12 @@ module.exports = {
       }
 
       const ratings = userData['perfs'];
+      const playTime = userData['playTime'];
       const normalModes = ['bullet', 'blitz', 'rapid', 'classical'];
 
       const embed = new MessageEmbed()
         .setColor('#ffe500')
-        .setTitle(`${username}'s ratings`)
+        .setTitle(`${username}`)
         .setURL(`${userData.url}`)
         .setThumbnail(LICHESS_LOGO_URL);
 
@@ -61,6 +62,8 @@ module.exports = {
           addRatingEmbedField(embed, mode, ratingObj);
         }
       }
+
+      addPlayTimesToEmbed(embed, playTime);
 
       await message.reply({
         embeds: [embed]
@@ -97,6 +100,16 @@ const addRatingEmbedField = (embed, mode, ratingObj) => {
     }
     ratingStr += ` (${ratingObj.games} games)`;
     embed.addField(`${capitalizeFirstLetter(mode)}`, ratingStr, true);
+  }
+};
+
+const addPlayTimesToEmbed = (embed, playTime) => {
+  const playTimeFields = ['total', 'tv'];
+  for (let field of playTimeFields) {
+    const playTimeVal = playTime[field];
+    if (playTimeVal) {
+      embed.addField(`${capitalizeFirstLetter(field)} Time Played`, `${playTimeVal}s`, true);
+    }
   }
 };
 
