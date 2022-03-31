@@ -27,6 +27,13 @@ module.exports = async function(client, oldState, newState) {
     const memberId = newState.id;
     const member = newState.guild.members.cache.get(memberId);
 
+    const afkChannelId = newState.guild.afkChannelId;
+    if (afkChannelId && channelId === afkChannelId) {
+        // ignore greetings in afk channels
+        logger.log(`IGNORE GREET AFK user: ${member.user.username} | channel: ${member.voice.channel.name}`);
+        return;
+    }
+
     if (memberId === '148979092681785346') {
         // dont let pastrami do anything for Brad
         logger.log(`IGNORE GREET user: ${member.user.username} | channel: ${member.voice.channel.name}`);
