@@ -65,6 +65,8 @@ module.exports = async function(client, oldState, newState) {
     const channel = client.channels.cache.get(channelId);
     let memberEarned69 = false;
 
+    const today = new Date();
+
     if (isProduction) {
         let user69Check = await apiGetUser69Check(memberId);
         if (user69Check.error) {
@@ -91,6 +93,10 @@ module.exports = async function(client, oldState, newState) {
             if (user69Check.earned > 0) {
                 randomMemberGreeting += ` ${user69Check.earned + 1} times.`;
             }
+        } else if (today.getMonth() === 3 && today.getDate() === 1) {
+            // april fools 69
+            randomMemberGreeting = '*NAME* has earned the right to 69 with me. April fools!'
+                .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
         }
     }
 
