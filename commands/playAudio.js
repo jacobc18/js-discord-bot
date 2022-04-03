@@ -36,7 +36,7 @@ module.exports = {
         logger.log(`/PLAYAUDIO user: ${interaction.member.user.username} | channel: ${interaction.member.voice.channel.name} | ${fullFilePath} | input: ${input}`);
 
         connectAndPlayAudioFile(channel, fullFilePath);
-        await interaction.reply(`successfully played audio file via input: ${input}`);
+        await interaction.reply(`successfully played audio file "${foundFile}" via input: ${input}`);
 	}
 };
 
