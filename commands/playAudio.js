@@ -23,18 +23,32 @@ module.exports = {
 
         const audioFileNames = fs.readdirSync(AUDIOFILES_DIR_PATH);
         const fileName = interaction.options?.getString('filename');
+        const foundFile = findStringIgnoreCase(fileName, audioFileNames);
 
-        if (!fileName || !audioFileNames.includes(fileName)) {
+        if (!foundFile) {
             await interaction.reply(`Could not find an audio file named: ${fileName}.\nTry using /listaudio to get a list of available audio files.`);
             return;
         }
 
         const channel = interaction.guild.channels.cache.get(channelId);
-        const fullFilePath = `${AUDIOFILES_DIR_PATH}/${fileName}`;
+        const fullFilePath = `${AUDIOFILES_DIR_PATH}/${foundFile}`;
 
         logger.log(`/PLAYAUDIO user: ${interaction.member.user.username} | channel: ${interaction.member.voice.channel.name} | ${fullFilePath}`);
 
         connectAndPlayAudioFile(channel, fullFilePath);
         await interaction.reply(`successfully played audio file: ${fileName}`);
 	}
+};
+
+const findStringIgnoreCase = (str, strArray) => {
+    if (!str) return false;
+
+    for (let i = 0; i < strArray.length; ++i) {
+        const s = strArray[i];
+        if (s.toLowerCase().includes(str.toLowerCase())) {
+            return s;
+        }
+    }
+
+    return false;
 };
