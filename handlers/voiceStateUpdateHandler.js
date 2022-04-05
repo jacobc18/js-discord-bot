@@ -8,6 +8,7 @@ const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
 const createGuildData = require('../utils/createGuildData');
 const sendBotOwnerDM = require('../utils/sendBotOwnerDM');
 const {
+    getUser: apiGetUser,
     getUser69Check: apiGetUser69Check,
     getTotal69s: apiGetTotal69s,
     postNewUser: apiPostNewUser
@@ -47,7 +48,7 @@ module.exports = async function(client, oldState, newState) {
 
     if (player && player.nowPlaying) return;
     
-    const memberData = users[memberId];
+    const memberData = await apiGetUser(memberId);
 
     if (!client.guildData.get(newState.guild.id)) {
         client.guildData.set(newState.guild.id, await createGuildData(newState.guild.id));
@@ -58,8 +59,9 @@ module.exports = async function(client, oldState, newState) {
 
     const memberGreetings = memberData?.greetings || defaultGreetings;
 
+    const matchedGreetings = getMostSpecificMatchedGreetings(memberGreetings);
     let randomMemberGreeting =
-        memberGreetings[getRandomBetween(0, memberGreetings.length - 1)]
+        matchedGreetings[getRandomBetween(0, matchedGreetings.length - 1)]
         .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
     
     const channel = client.channels.cache.get(channelId);
@@ -116,4 +118,78 @@ module.exports = async function(client, oldState, newState) {
     }
     
     speakText(channel, randomMemberGreeting);
+};
+
+// greetings keys are in the form mm/dd/yyyy where '*' matches any value
+// - examples: *, 5/1/1996, 4/1/*, */1/*, 11/*/*
+const getMostSpecificMatchedGreetings = (greetingsObj) => {
+    const keys = Object.keys(greetingsObj);
+
+    if (keys.length === 1) return greetingsObj[keys[0]];
+
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = today.getMonth() + 1; // months start at 0
+    const d = today.getDate();
+
+    let matches = ['*'];
+    for(let i = 0; i < keys.length; ++i) {
+        const key = keys[i];
+        if (key === '*') continue;
+
+        const splitKey = key.split('/');
+        if (splitKey.length !== 3) {
+            // unsupported key
+            continue;
+        }
+
+        const keyY = getParsedSplitVal(splitKey[2], y);
+        const keyM = getParsedSplitVal(splitKey[0], m);
+        const keyD = getParsedSplitVal(splitKey[1], d);
+
+        // found a match
+        if (getMatchKey(d, m, y) === getMatchKey(keyD, keyM, keyY)) {
+            matches.push(key);
+        }
+    }
+
+    const mostSpecificMatches = getMostSpecificMatches(matches);
+
+    let results = [];
+    for (let m of mostSpecificMatches) {
+        results.push(...greetingsObj[m]);
+    }
+
+    return results;
+};
+
+// finds matched keys with least number of *'s
+// - returns multiple keys in the case of ties
+const getMostSpecificMatches = (matches) => {
+    if (matches.length === 1) return matches;
+
+    const countSet = {};
+
+    for (let matchKey of matches) {
+        if (matchKey === '*') continue;
+
+        const countWildChars = matchKey.split('*').length - 1;
+        if (!countSet[countWildChars]) {
+            countSet[countWildChars] = [matchKey];
+        } else {
+            countSet[countWildChars].push(matchKey);
+        }
+    }
+
+    const lowestCount = Math.min(...Object.keys(countSet));
+
+    return countSet[lowestCount];
+}
+
+const getParsedSplitVal = (splitVal, defaultVal) => {
+    return splitVal === '*' ? defaultVal : parseInt(splitVal);
+};
+
+const getMatchKey = (d, m, y) => {
+    return `${m}/${d}/${y}`;
 };

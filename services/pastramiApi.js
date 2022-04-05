@@ -1,11 +1,28 @@
+const NODE_ENV = process.env.NODE_ENV;
+const isProduction = NODE_ENV.includes('production');
+
 const fetch = require('node-fetch');
 const logger = require('../utils/logger');
 
-const PASTRAMI_API_ENDPOINT = 'http://pastramiapi-env.eba-eemspvyp.us-east-1.elasticbeanstalk.com';
+const PASTRAMI_API_ENDPOINT = isProduction ?
+  'http://pastramiapi-env.eba-eemspvyp.us-east-1.elasticbeanstalk.com' :
+  'http://localhost:8081';
 
 const getUsers = async() => {
   try {
     const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    logger.log(err);
+  }
+};
+
+const getUser = async(discordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
       method: 'GET'
     });
 
@@ -65,6 +82,7 @@ const getGuild = async (guildDiscordId) => {
 
 module.exports = {
   getUsers,
+  getUser,
   getUser69Check,
   getTotal69s,
   postNewUser,

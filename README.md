@@ -135,6 +135,7 @@ $ start.bat
 This will set `NODE_ENV` to `production` and restart the bot process on error. This can be terminated with cntrl + C and entering Y or killing the process otherwise.
 
 ### Greetings
+!!! Latest version of Pastrami uses custom API for user data which includes greetings !!!
 
 - User Specific Greetings 
 
