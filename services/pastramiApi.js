@@ -80,11 +80,49 @@ const getGuild = async (guildDiscordId) => {
   }
 };
 
+const putUserGreetings = async(discordId, greetingsObj) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        greetings: greetingsObj
+      })
+    });
+
+    return await response.json();
+  } catch (err) {
+    logger.log(err);
+  }
+};
+
+const deleteUserGreetings = async(discordId, greetingsObj) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        greetings: greetingsObj
+      })
+    });
+
+    return await response.json();
+  } catch (err) {
+    logger.log(err);
+  }
+};
+
 module.exports = {
   getUsers,
   getUser,
   getUser69Check,
   getTotal69s,
   postNewUser,
-  getGuild
+  getGuild,
+  putUserGreetings,
+  deleteUserGreetings
 }
