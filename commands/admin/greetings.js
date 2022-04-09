@@ -1,9 +1,8 @@
 const { isDiscordId } = require('../../utils/regexHelpers');
 const joinArgsByQuotes = require('../../utils/joinArgsByQuotes');
 const {
-  getUser,
-  postNewUser,
-  putUserGreetings
+  putUserGreetings,
+  tryGetUser
 } = require('../../services/pastramiApi')
 
 
@@ -51,24 +50,6 @@ const greetingsAdd = async(message, args) => {
 // TODO
 const greetingsDelete = async(message, args) => {
   await message.channel.send('!admin g delete WIP');
-};
-
-// gets user data from api and if it doesn't exist, creates a new user
-const tryGetUser = async(message, discordId) => {
-  // check to see if user already exists
-  const apiUser = await getUser(discordId);
-  if (apiUser.error) {
-    // user probably doesn't exist in db, create new user
-    const newUser = await postNewUser(discordId);
-    if (newUser.error) {
-      await message.channel.send(`new user creation failed for ${discordId}, err: ${newUser.error}`);
-      return newUser;
-    }
-
-    return newUser;
-  }
-
-  return apiUser;
 };
 
 module.exports = {

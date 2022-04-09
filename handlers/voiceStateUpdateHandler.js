@@ -8,10 +8,10 @@ const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
 const createGuildData = require('../utils/createGuildData');
 const sendBotOwnerDM = require('../utils/sendBotOwnerDM');
 const {
-    getUser: apiGetUser,
+    tryGetUser: apiTryGetUser,
     getUser69Check: apiGetUser69Check,
     getTotal69s: apiGetTotal69s,
-    postNewUser: apiPostNewUser
+    postNewUser: apiPostNewUser,
 } = require('../services/pastramiApi')
 const logger = require('../utils/logger');
 
@@ -48,7 +48,10 @@ module.exports = async function(client, oldState, newState) {
 
     if (player && player.nowPlaying) return;
     
-    const memberData = await apiGetUser(memberId);
+    const memberData = await apiTryGetUser(memberId);
+    if (memberData.error) {
+        await sendBotOwnerDM(client, `tryGetUser failed for discordId: ${memberId}, err: ${memberData.error}`);
+    }
 
     if (!client.guildData.get(newState.guild.id)) {
         client.guildData.set(newState.guild.id, await createGuildData(newState.guild.id));
