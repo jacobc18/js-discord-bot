@@ -60,7 +60,7 @@ module.exports = async function(client, oldState, newState) {
     const guildData = client.guildData.get(newState.guild.id);
     const defaultGreetings = guildData.greetings;
 
-    const memberGreetings = memberData?.greetings || defaultGreetings;
+    const memberGreetings = memberData?.greetings || {'*' : defaultGreetings};
 
     const matchedGreetings = getMostSpecificMatchedGreetings(memberGreetings);
     let randomMemberGreeting =
