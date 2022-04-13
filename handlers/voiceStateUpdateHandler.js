@@ -1,7 +1,6 @@
 const NODE_ENV = process.env.NODE_ENV;
 const isProduction = NODE_ENV.includes('production');
 
-const users = require('../data/users.json');
 const speakText = require('../utils/speakText');
 const getRandomBetween = require('../utils/getRandomBetween');
 const connectAndPlayAudioFile = require('../utils/connectAndPlayAudioFile');
@@ -96,11 +95,15 @@ module.exports = async function(client, oldState, newState) {
             randomMemberGreeting = '*NAME* has earned the right to 69 with me'
                 .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
             if (user69Check.earned > 0) {
-                randomMemberGreeting += ` ${user69Check.earned + 1} times.`;
+                randomMemberGreeting += ` ${user69Check.earned} times.`;
             }
         } else if (today.getMonth() === 3 && today.getDate() === 1) {
             // april fools 69
             randomMemberGreeting = '*NAME* has earned the right to 69 with me. April fools!'
+                .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
+        } else if (today.getMonth() === 3 && today.getDate() === 20 && getRandomBetween(1, 5) === 5) {
+            // 420
+            randomMemberGreeting = '*NAME* has earned the right to blaze it up with me.'
                 .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
         }
     }
