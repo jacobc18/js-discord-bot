@@ -17,8 +17,10 @@ const greetingsAdd = async(message, args) => {
     return;
   }
 
-  const apiUser = await tryGetUser(message, discordId);
-  if (apiUser.error) return;
+  const apiUser = await tryGetUser(discordId);
+  if (apiUser.error) {
+    await message.channel.send(`failed to get user with discordId: ${discordId}`);
+  };
 
   const joinedArgs = joinArgsByQuotes(args.slice(1));
 
