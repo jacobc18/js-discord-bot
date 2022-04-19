@@ -95,6 +95,7 @@ module.exports = {
                 interaction.reply(
                     'There was an issue processing your request. (Perhaps invalid/unsupported input)'
                 );
+                player.commandLock = false;
                 return;
             }
 
@@ -126,6 +127,7 @@ module.exports = {
                 interaction.reply(
                     'Live streams are disabled in this server'
                 );
+                player.commandLock = false;
                 return;
             }
 
@@ -134,6 +136,7 @@ module.exports = {
                 interaction.reply(
                     `Videos longer than ${maxVideoPlayLengthMinutes} minutes are disabled`
                 );
+                player.commandLock = false;
                 return;
             }
 
@@ -141,6 +144,7 @@ module.exports = {
                 interaction.reply(
                     `The queue hit its limit of ${maxQueueLength}, please wait a bit before attempting to play more songs`
                 );
+                player.commandLock = false;
                 return;
             }
 
@@ -234,6 +238,7 @@ module.exports = {
                 await interaction.reply(`Enqueued tracks within Spotify ${spotifyURLType} entitled ${spotifyData.name} from link: ${query}`);
             }
         } else {
+            player.commandLock = false;
             await interaction.reply('invalid query format');
         }
 
