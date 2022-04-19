@@ -60,6 +60,7 @@ module.exports = {
         let logStringAdditions = '';
 
         let query = interaction.options.getString('query');
+        logger.log(`/YT query: ${query}`);
 
         await interaction.channel.send(`\`${query}\``);
 
