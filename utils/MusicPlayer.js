@@ -11,7 +11,7 @@ const {
 const { setTimeout } = require('timers');
 const { promisify } = require('util');
 // const ytdl = require('ytdl-core');
-const { raw: youtubeDlRaw } = require('youtube-dl-exec');
+const youtubedl = require('youtube-dl-exec');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const logger = require('./logger');
 
@@ -208,7 +208,7 @@ class MusicPlayer {
   }
 
   // old process function that uses ytdl-core as the youtube download package
-  // async process_old(queue) {
+  // async process(queue) {
   //   if (
   //     this.audioPlayer.state.status !== AudioPlayerStatus.Idle ||
   //     this.queue.length === 0
@@ -239,7 +239,7 @@ class MusicPlayer {
 
 const createAudioResourceWithYTDLRaw = async(url) => {
   return new Promise((resolve, reject) => {
-    const process = youtubeDlRaw(
+    const process = youtubedl.exec(
       url,
       {
         o: '-',
