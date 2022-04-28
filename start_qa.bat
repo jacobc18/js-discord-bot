@@ -1,3 +1,3 @@
 :start
-set NODE_ENV=qa&& node .
+set NODE_ENV=qa&& npm install&& node .
 goto start

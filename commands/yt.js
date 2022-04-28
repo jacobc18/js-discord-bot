@@ -6,6 +6,7 @@ const {
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Youtube = require('simple-youtube-api');
 const { YouTube: YoutubeSearch } = require('youtube-sr');
+const YTS = require('yt-search');
 const fetch = require('node-fetch');
 const MusicPlayer = require('../utils/MusicPlayer');
 const createGuildData = require('../utils/createGuildData');
@@ -122,47 +123,11 @@ module.exports = {
             });
             if (!video) return;
 
-            if (video.raw.snippet.liveBroadcastContent === 'live' && !playLiveStreams) {
-                deleteMusicPlayerIfNeeded(interaction);
-                interaction.reply(
-                    'Live streams are disabled in this server'
+            const result = await handleYoutubeVideo(interaction, video, player, null);
+            if (!result) {
+                await interaction.reply(
+                    `:x: There was a problem playing video with id ${video.videoId}`
                 );
-                player.commandLock = false;
-                return;
-            }
-
-            if ((video.duration.days * 1440) + (video.duration.hours * 60) + video.duration.minutes > maxVideoPlayLengthMinutes) {
-                deleteMusicPlayerIfNeeded(interaction);
-                interaction.reply(
-                    `Videos longer than ${maxVideoPlayLengthMinutes} minutes are disabled`
-                );
-                player.commandLock = false;
-                return;
-            }
-
-            if (player.length > maxQueueLength) {
-                interaction.reply(
-                    `The queue hit its limit of ${maxQueueLength}, please wait a bit before attempting to play more songs`
-                );
-                player.commandLock = false;
-                return;
-            }
-
-            player.queue.push(
-                constructSongObj(
-                    video,
-                    interaction.member.voice.channel,
-                    interaction.member.user,
-                    timestamp
-                )
-            );
-
-            if (player.audioPlayer.state.status !== AudioPlayerStatus.Playing) {
-                // first video in queue
-                handleSubscription(player.queue, interaction, player);
-            } else {
-                // video was added to queue
-                await interaction.reply(`Enqueued ${video.title}`);
             }
 
             logStringAdditions += ` | video.title: ${video.title}`;
@@ -238,12 +203,78 @@ module.exports = {
                 await interaction.reply(`Enqueued tracks within Spotify ${spotifyURLType} entitled ${spotifyData.name} from link: ${query}`);
             }
         } else {
-            player.commandLock = false;
-            await interaction.reply('invalid query format');
+            // search for query input
+            // TODO: allow for -l (-L) flag to list available videos
+            const { videos } = await YTS(query);
+            if (!videos || videos.length === 0) {
+                await interaction.reply(`Youtube Search returned 0 videos for query: "${query}"`);
+
+                return;
+            }
+
+            const topVideo = videos[0];
+            topVideo.duration = createRawYTVideoDuration(topVideo.duration);
+            const result = handleYoutubeVideo(interaction, topVideo, player, '');
+            if (!result) return;
         }
 
         logger.log(`/YT user: ${interaction.member.user.username} | channel: ${voiceChannel.name} | ${query}${logStringAdditions}`);
     }
+};
+
+const handleYoutubeVideo = async(interaction, video, player, timestamp) => {
+    if (video.raw && video.raw.snippet.liveBroadcastContent === 'live' && !playLiveStreams) {
+        deleteMusicPlayerIfNeeded(interaction);
+        await interaction.reply(
+            'Live streams are disabled in this server'
+        );
+        player.commandLock = false;
+
+        return null;
+    }
+
+    const durationMinutes = Object.keys(video.duration).includes('days')
+        ? (video.duration.days * 1440) + (video.duration.hours * 60) + video.duration.minutes
+        : video.duration.seconds / 60;
+
+
+    if (durationMinutes > maxVideoPlayLengthMinutes) {
+        deleteMusicPlayerIfNeeded(interaction);
+        await interaction.reply(
+            `Videos longer than ${maxVideoPlayLengthMinutes} minutes are disabled`
+        );
+        player.commandLock = false;
+
+        return null;
+    }
+
+    if (player.length > maxQueueLength) {
+        await interaction.reply(
+            `The queue hit its limit of ${maxQueueLength}, please wait a bit before attempting to play more songs`
+        );
+        player.commandLock = false;
+
+        return null;
+    }
+
+    player.queue.push(
+        constructSongObj(
+            video,
+            interaction.member.voice.channel,
+            interaction.member.user,
+            timestamp
+        )
+    );
+
+    if (player.audioPlayer.state.status !== AudioPlayerStatus.Playing) {
+        // first video in queue
+        handleSubscription(player.queue, interaction, player);
+    } else {
+        // video was added to queue
+        await interaction.reply(`Enqueued ${video.title}`);
+    }
+
+    return video;
 };
 
 // returns spotify authentication token for further spotify api calls
@@ -318,4 +349,25 @@ const concatTrackDetails = ({name, artists = []}) => {
         artistsStr += ` ${artists[i].name}`;
     }
     return `${name}${artistsStr}`;
+};
+
+const createRawYTVideoDuration = (ytsDuration) => {
+    const secsInADay = 86400;
+    const secsInAnHour = 3600;
+    let ytsSeconds = ytsDuration.seconds;
+    const days = Math.floor(ytsSeconds / secsInADay);
+    ytsSeconds %= secsInADay;
+    const hours = Math.floor(ytsSeconds / secsInAnHour);
+    ytsSeconds %= secsInAnHour;
+    const minutes = Math.floor(ytsSeconds / 60);
+    ytsSeconds %= 60;
+    const seconds = ytsSeconds;
+
+    return {
+        years: 0, months: 0, weeks: 0,
+        days,
+        hours,
+        minutes,
+        seconds
+    };
 };
