@@ -34,16 +34,20 @@ const getUser = async(discordId) => {
 
 // gets user data from api and if it doesn't exist, creates a new user
 const tryGetUser = async(discordId) => {
-  // check to see if user already exists
-  const apiUser = await getUser(discordId);
-  if (apiUser.error) {
-    // user probably doesn't exist in db, create new user
-    const newUser = await postNewUser(discordId);
+  try {
+    // check to see if user already exists
+    const apiUser = await getUser(discordId);
+    if (apiUser.error) {
+      // user probably doesn't exist in db, create new user
+      const newUser = await postNewUser(discordId);
 
-    return newUser;
+      return newUser;
+    }
+
+    return apiUser;
+  } catch (err) {
+    logger.log(err);
   }
-
-  return apiUser;
 };
 
 const getUser69Check = async(discordId) => {

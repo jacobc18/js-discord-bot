@@ -46,10 +46,21 @@ module.exports = async function(client, oldState, newState) {
     let player = client.musicPlayerManager.get(newState.guild.id);
 
     if (player && player.nowPlaying) return;
+
+    const channel = member.voice.channel;
     
     const memberData = await apiTryGetUser(memberId);
+    if (!memberData) {
+        await sendBotOwnerDM(client, `tryGetUser client error for discordId: ${memberId}`);
+        let tempGreeting = 'welcome *NAME*'
+                .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
+
+        await speakText(channel, tempGreeting);
+        return;
+    }
+
     if (memberData.error) {
-        await sendBotOwnerDM(client, `tryGetUser failed for discordId: ${memberId}, err: ${memberData.error}`);
+        await sendBotOwnerDM(client, `tryGetUser api error for discordId: ${memberId}, err: ${memberData.error}`);
     }
 
     if (!client.guildData.get(newState.guild.id)) {
@@ -66,7 +77,6 @@ module.exports = async function(client, oldState, newState) {
         matchedGreetings[getRandomBetween(0, matchedGreetings.length - 1)]
         .replaceAll('*NAME*', `${member.nickname || member.user.username || ''}`);
     
-    const channel = client.channels.cache.get(channelId);
     let memberEarned69 = false;
 
     const today = new Date();
@@ -123,7 +133,7 @@ module.exports = async function(client, oldState, newState) {
         }
     }
     
-    speakText(channel, randomMemberGreeting);
+    await speakText(channel, randomMemberGreeting);
 };
 
 // greetings keys are in the form mm/dd/yyyy where '*' matches any value

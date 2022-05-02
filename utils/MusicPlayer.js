@@ -239,7 +239,7 @@ class MusicPlayer {
 
 const createAudioResourceWithYTDLRaw = async(url) => {
   return new Promise((resolve, reject) => {
-    const process = youtubedl.exec(
+    const process = youtubedl.raw(
       url,
       {
         o: '-',
