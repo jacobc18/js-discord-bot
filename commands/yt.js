@@ -208,14 +208,17 @@ module.exports = {
             const { videos } = await YTS(query);
             if (!videos || videos.length === 0) {
                 await interaction.reply(`Youtube Search returned 0 videos for query: "${query}"`);
-
+                player.commandLock = false;
                 return;
             }
 
             const topVideo = videos[0];
             topVideo.duration = createRawYTVideoDuration(topVideo.duration);
             const result = handleYoutubeVideo(interaction, topVideo, player, '');
-            if (!result) return;
+            if (!result) {
+                player.commandLock = false;
+                return;
+            }
         }
 
         logger.log(`/YT user: ${interaction.member.user.username} | channel: ${voiceChannel.name} | ${query}${logStringAdditions}`);
