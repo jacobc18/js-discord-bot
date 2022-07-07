@@ -36,7 +36,12 @@ module.exports = {
 
         if (success) {
             // message.channel.send(':arrow_forward: Track resumed. Use !pause to pause or !leave to have the bot leave the voice channel');
-            // await message.deleteReply();
+            try {
+                // discordjs complains message.delete() is not a function.... but it works? so we ignore the error
+                await message.delete();
+            } catch (e) { 
+                // do nothing
+            }
             return;
         }
 

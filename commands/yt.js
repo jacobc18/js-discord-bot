@@ -45,7 +45,7 @@ module.exports = {
             option.setName('query')
                 .setDescription('url')
                 .setRequired(true)),
-    async execute(interaction) {
+    async execute(interaction, args) {
         if (!interaction.client.guildData.get(interaction.guildId)) {
             interaction.client.guildData.set(interaction.guildId, await createGuildData(interaction.guildId));
         }
@@ -60,7 +60,7 @@ module.exports = {
 
         let logStringAdditions = '';
 
-        let query = interaction.options.getString('query');
+        let query = args[0] || interaction.options.getString('query');
         logger.log(`/YT query: ${query}`);
 
         await interaction.channel.send(`\`${query}\``);

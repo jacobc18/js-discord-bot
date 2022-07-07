@@ -57,10 +57,16 @@ client.on('interactionCreate', async interaction => {
 
   let { commandName } = interaction;
 
+  let args = [];
+
   if (isButtonInteraction) {
     const splitButtonCustomId = interaction.customId.split('cmd:');
     if (splitButtonCustomId.length > 1) {
-      commandName = splitButtonCustomId[1];
+      const splitButtonCommand = splitButtonCustomId[1].split(' ');
+      commandName = splitButtonCommand.length === 1 ? splitButtonCustomId[1] : splitButtonCommand[0];
+      if (splitButtonCommand.length > 1) {
+        args = splitButtonCommand.slice(1);
+      }
     } else {
 
       // handle non-command button interactions here
@@ -75,7 +81,7 @@ client.on('interactionCreate', async interaction => {
   if (!command) return;
 
   try {
-    await client.commands.get(commandName).execute(interaction);
+    await client.commands.get(commandName).execute(interaction, args);
   } catch (error) {
     console.error(error);
     if (interaction.deferred || interaction.replied) {

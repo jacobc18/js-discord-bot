@@ -116,6 +116,7 @@ class MusicPlayer {
         const playingEmbed = new MessageEmbed()
           .setThumbnail(this.nowPlaying.thumbnail)
           .setTitle(`Now Playing:\n${this.nowPlaying.title}`)
+          .setDescription(`[link to video](${this.nowPlaying.url})`)
           .setColor('#00ff00')
           .addField('Duration', ':stopwatch: ' + this.nowPlaying.duration, true)
           .setFooter(
@@ -141,7 +142,12 @@ class MusicPlayer {
               .setCustomId('cmd:skip')
               .setLabel('')
               .setStyle('PRIMARY')
-              .setEmoji('⏭️')
+              .setEmoji('⏭️'),
+            new MessageButton()
+              .setCustomId(`cmd:yt ${this.nowPlaying.url}`)
+              .setLabel('')
+              .setStyle('SUCCESS')
+              .setEmoji('▶️')
           );
         this.textChannel.send({ embeds: [playingEmbed], components: [row] });
       } else if (newState.status === AudioPlayerStatus.Paused) {
@@ -160,7 +166,7 @@ class MusicPlayer {
               .setCustomId('cmd:resume')
               .setLabel('')
               .setStyle('SUCCESS')
-              .setEmoji('▶️'),
+              .setEmoji('⏯️'),
             new MessageButton()
               .setCustomId('cmd:skip')
               .setLabel('')
