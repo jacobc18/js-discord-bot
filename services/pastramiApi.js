@@ -50,6 +50,11 @@ const tryGetUser = async(discordId) => {
   }
 };
 
+const getIsUserBanned = async(discordId) => {
+  // ban ben cuz donkney kong BM
+  return discordId === '188844366385774593';
+};
+
 const getUser69Check = async(discordId) => {
   try {
     const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/69check`, {
@@ -138,6 +143,7 @@ module.exports = {
   getUsers,
   getUser,
   tryGetUser,
+  getIsUserBanned,
   getUser69Check,
   getTotal69s,
   postNewUser,

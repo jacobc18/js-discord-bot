@@ -5,6 +5,7 @@ const { Client, Intents, Collection } = require('discord.js');
 
 const sendBotOwnerDM = require('./utils/sendBotOwnerDM');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
+const { getIsUserBanned } = require('./services/pastramiApi');
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -56,6 +57,10 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand() && !isButtonInteraction) return;
 
   let { commandName } = interaction;
+  if (getIsUserBanned(interaction.author.id)) {
+    await message.channel.send('You\'ve been naughty! I\'m not listening to you!');
+    return;
+  }
 
   let args = [];
 
@@ -95,12 +100,17 @@ client.on('messageCreate', async message => {
   if (message.content.charAt(0) !== '!') return;
   if (message.author.bot) return;
 
+  if (getIsUserBanned(message.author.id)) {
+    await message.channel.send('You\'ve been naughty! I\'m not listening to you!');
+    return;
+  }
+
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
 
   if (command === 'report') {
     await sendBotOwnerDM(client, `"${message.content}" FROM ${message.author.username} (${message.author.id})`);
-    message.channel.send('I sent your report! Thank you');
+    await message.channel.send('I sent your report! Thank you');
     return;
   }
 
@@ -108,12 +118,12 @@ client.on('messageCreate', async message => {
     await client.commands.get(command).execute(message, splitArgs);
   } else if (command === 'echo') {
     if (splitArgs.length > 0) {
-      message.channel.send(splitArgs.join(' '));
+      await message.channel.send(splitArgs.join(' '));
     } else {
       message.channel.send('Tell me what to say ya bimbus.');
     }
   } else {
-    message.channel.send('not a valid command');
+    await message.channel.send('not a valid command');
   }
 });
 
