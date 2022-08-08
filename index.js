@@ -57,10 +57,10 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand() && !isButtonInteraction) return;
 
   let { commandName } = interaction;
-  if (getIsUserBanned(interaction.author.id)) {
-    await message.channel.send('You\'ve been naughty! I\'m not listening to you!');
-    return;
-  }
+  // if (getIsUserBanned(interaction.user.id)) {
+  //   await interaction.reply('You\'ve been naughty! I\'m not listening to you!');
+  //   return;
+  // }
 
   let args = [];
 
@@ -100,10 +100,10 @@ client.on('messageCreate', async message => {
   if (message.content.charAt(0) !== '!') return;
   if (message.author.bot) return;
 
-  if (getIsUserBanned(message.author.id)) {
-    await message.channel.send('You\'ve been naughty! I\'m not listening to you!');
-    return;
-  }
+  // if (getIsUserBanned(message.author.id)) {
+  //   await message.channel.send('You\'ve been naughty! I\'m not listening to you!');
+  //   return;
+  // }
 
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
