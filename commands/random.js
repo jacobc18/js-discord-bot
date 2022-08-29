@@ -13,7 +13,7 @@ module.exports = {
     logger.log(`!RANDOM user: ${message.member.user.username} | guildId: ${guildId}`);
 
     const args = rest[0] || [];
-    if (args.length === 0) {
+    if (args.length === 0 || (args.length === 1 && args[0].toLowerCase() === 'help')) {
       await message.channel.send('Please provide arguments separated by spaces like so: `!random arg1 arg2 arg3 etc` or a single argument of a number: `!random 7`');
 
       return;

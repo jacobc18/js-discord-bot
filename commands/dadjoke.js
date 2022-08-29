@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const logger = require('../utils/logger');
+const speakText = require('../utils/speakText');
 
 const DAD_JOKE_API_URL = 'https://icanhazdadjoke.com/';
 
@@ -8,14 +9,27 @@ module.exports = {
     name: 'dadjoke',
     type: 'text'
   },
-  async execute(message) {
+  async execute(message, ...rest) {
     const guildId = message.guildId;
+    const textChannel = message.channel;
+    const args = rest[0];
+    let speakTextFlag = false;
 
-    logger.log(`!DADJOKE user: ${message.member.user.username} | guildId: ${guildId}`);
+    if (args.length > 0 && args[0].toLowerCase() === '-s') {
+      speakTextFlag = true;
+    }
 
-    const dadJokeData = await getDadJokeData();
+    const { joke } = await getDadJokeData();
 
-    await message.channel.send(dadJokeData.joke);
+    logger.log(`!DADJOKE user: ${message.member.user.username} | guildId: ${guildId} | joke: ${joke}`);
+    
+    await textChannel.send(joke);
+    if (speakTextFlag) {
+      const voiceChannelId = message.member.voice.channelId;
+      const voiceChannel = message.member.guild.channels.cache.get(voiceChannelId);
+
+      await speakText(voiceChannel, joke);
+    }
   }
 };
 
