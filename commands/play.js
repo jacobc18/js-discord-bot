@@ -2,7 +2,7 @@ const logger = require('../utils/logger');
 
 module.exports = {
   data: {
-    name: 'plsy',
+    name: 'play',
     type: 'text'
   },
   async execute(message) {
