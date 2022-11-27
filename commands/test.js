@@ -7,7 +7,7 @@ module.exports = {
     name: 'test',
     type: 'text'
   },
-  async execute(message) {
+  async execute(message, splitArgs) {
     const userId = message.author.id;
     if (userId !== BOT_OWNER_ID) {
       await message.channel.send('command is not available to you');
