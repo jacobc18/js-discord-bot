@@ -3,6 +3,10 @@ const isProduction = NODE_ENV.includes('production');
 
 const fetch = require('node-fetch');
 const logger = require('../utils/logger');
+const { getIsAdminId } = require('../utils/adminHelpers');
+
+// banning related imports... TODO: handle in DB/API instead of JSON file
+const fs = require('fs');
 
 const PASTRAMI_API_ENDPOINT = isProduction ?
   'http://pastramiapi-env.eba-eemspvyp.us-east-1.elasticbeanstalk.com' :
@@ -50,9 +54,83 @@ const tryGetUser = async(discordId) => {
   }
 };
 
-const getIsUserBanned = async(discordId) => {
-  // ban ben cuz donkney kong BM
-  return discordId === '188844366385774593';
+// TODO: implement banlist in db/api
+const getIsUserBannedData = async(discordId) => {
+  if (getIsAdminId(discordId)) return false;
+
+  const banlist = require('../data/banlist.json');
+  const userBanData = banlist[discordId];
+
+  if (!userBanData) { return { banned: false }; }
+
+  return { banned: true, data: userBanData };
+};
+
+// TODO: implement banlist in db/api
+const banUser = async (discordId, reason) => {
+  if (getIsAdminId(discordId)) {
+    return { banned: false, failReason: 'user is admin', discordId };
+  }
+
+  const banlist = require('../data/banlist.json');
+
+  let userBanData = banlist[discordId];
+
+  if (!userBanData) {
+    // user ban data does not currently exist
+    userBanData = {
+      timestamp: new Date().getTime(),
+      reason,
+      prevReasons: []
+    };
+  } else {
+    // user ban data already exists
+    if (userBanData.timestamp > 0) {
+      // user is already banned currently
+      return { banned: false, failReason: 'user is already banned', discordId };
+    }
+
+    userBanData = {
+      ...userBanData,
+      timestamp: new Date().getTime(),
+      reason
+    };
+    
+  }
+
+  banlist[discordId] = userBanData;
+  fs.writeFileSync('./data/banlist.json', JSON.stringify(banlist, null, 2));
+
+  return { banned: true, discordId };
+};
+
+// TODO: implement banlist in db/api
+const unbanUser = async (discordId) => {
+  const banlist = require('../data/banlist.json');
+  const bannedUserIds = Object.keys(banlist);
+  if (bannedUserIds.length === 0) return { unbanned: false, failReason: 'no current users are banned', discordId };
+
+  let userBanData = banlist[discordId];
+
+  if (!userBanData) {
+    // user ban data does not exist\
+    return { unbanned: false, failReason: 'user is not currently banned', discordId };
+  } else {
+    let reason = userBanData.reason;
+    if (reason.length === 0) {
+      reason = '*no reason provided*';
+    }
+    userBanData = {
+      timestamp: -1,
+      reason: '',
+      prevReasons: [...userBanData.prevReasons, reason]
+    };
+
+    banlist[discordId] = userBanData;
+    fs.writeFileSync('./data/banlist.json', JSON.stringify(banlist, null, 2));
+
+    return { unbanned: true, discordId };
+  }
 };
 
 const getUser69Check = async(discordId) => {
@@ -143,7 +221,9 @@ module.exports = {
   getUsers,
   getUser,
   tryGetUser,
-  getIsUserBanned,
+  getIsUserBannedData,
+  banUser,
+  unbanUser,
   getUser69Check,
   getTotal69s,
   postNewUser,

@@ -2,6 +2,10 @@ const {
   greetingsAdd,
   greetingsDelete
 } = require('./admin/greetings');
+const {
+  banUserByDiscordId,
+  unbanUserByDiscordId
+} = require('./admin/ban');
 
 const logger = require('../utils/logger');
 
@@ -34,6 +38,12 @@ module.exports = {
       case 'g':
         await handleGreetingsCmd(message, args.slice(1));
         return;
+      case 'ban':
+        await handleBanCmd(message, args.slice(1));
+        return;
+      case 'unban':
+        await handleUnbanCmd(message, args.slice(1));
+        return;
       case 'help':
         await handleHelpCmd(message);
         return;
@@ -61,6 +71,27 @@ const handleGreetingsCmd = async(message, args) => {
   }
 
   await message.channel.send('!admin g help WIP 2');
+};
+
+const handleBanCmd = async(message, args) => {
+  if (args.length === 0) {
+    await message.channel.send('missing input for !ADMIN ban cmd. Try adding discordId. Ex: !admin ban discord-id-here optional-reason-here');
+  }
+
+  const discordId = args.shift();
+  const reason = args.join(' ');
+
+  await banUserByDiscordId(message, discordId, reason);
+};
+
+const handleUnbanCmd = async(message, args) => {
+  if (args.length === 0) {
+    await message.channel.send('missing input for !ADMIN unban cmd. Try adding discordId. Ex: !admin unban discord-id-here');
+  }
+
+  const discordId = args.shift();
+
+  await unbanUserByDiscordId(message, discordId);
 };
 
 const handleHelpCmd = async(message, additionalMsg) => {

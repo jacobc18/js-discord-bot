@@ -4,8 +4,9 @@ const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
 
 const sendBotOwnerDM = require('./utils/sendBotOwnerDM');
+const bannedUserHandler = require('./handlers/bannedUserHandler');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
-const { getIsUserBanned } = require('./services/pastramiApi');
+const { getIsUserBannedData } = require('./services/pastramiApi');
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -57,10 +58,11 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand() && !isButtonInteraction) return;
 
   let { commandName } = interaction;
-  // if (getIsUserBanned(interaction.user.id)) {
-  //   await interaction.reply('You\'ve been naughty! I\'m not listening to you!');
-  //   return;
-  // }
+  const { banned, data: banData } = await getIsUserBannedData(interaction.user.id);
+  if (banned) {
+    await bannedUserHandler(client, { interaction }, banData);
+    return;
+  }
 
   let args = [];
 
@@ -100,10 +102,11 @@ client.on('messageCreate', async message => {
   if (message.content.charAt(0) !== '!') return;
   if (message.author.bot) return;
 
-  // if (getIsUserBanned(message.author.id)) {
-  //   await message.channel.send('You\'ve been naughty! I\'m not listening to you!');
-  //   return;
-  // }
+  const { banned, data: banData } = await getIsUserBannedData(message.author.id);
+  if (banned) {
+    await bannedUserHandler(client, { message }, banData);
+    return;
+  }
 
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
