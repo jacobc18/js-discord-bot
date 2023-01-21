@@ -61,7 +61,7 @@ const getIsUserBannedData = async(discordId) => {
   const banlist = require('../data/banlist.json');
   const userBanData = banlist[discordId];
 
-  if (!userBanData) { return { banned: false }; }
+  if (!userBanData || userBanData?.timestamp === -1) { return { banned: false }; }
 
   return { banned: true, data: userBanData };
 };
