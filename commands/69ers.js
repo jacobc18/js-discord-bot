@@ -4,6 +4,7 @@ const getDateTimeStringLocal = require('../utils/getDateTimeStringLocal');
 const logger = require('../utils/logger');
 
 const quickChartIOHost = 'https://quickchart.io/chart?c=';
+const MAX_USERS_TO_DISPLAY = 30;
 
 module.exports = {
     data: {
@@ -18,9 +19,7 @@ module.exports = {
         const users = await apiGetUsers();
         const sixtyNinersArray = users.map(userData => {
             return [userData.discordId, userData.sixtyNineData];
-        });
-
-        sixtyNinersArray.sort((a, b) => {
+        }).sort((a, b) => {
             const aEarned = a[1].earned;
             const bEarned = b[1].earned;
 
@@ -29,7 +28,7 @@ module.exports = {
             }
 
             return bEarned - aEarned;
-        });
+        }).slice(0, MAX_USERS_TO_DISPLAY);
 
         // don't use labels
         // const chartLabels = [];
@@ -38,7 +37,7 @@ module.exports = {
         let latestDate = new Date(1); // epoch
         let latest69er = '';
 
-        let outputStr = '```Top 69ers:\n';
+        let outputStr = '```Top ' + MAX_USERS_TO_DISPLAY + ' 69ers:\n';
         outputStr += `${'Name'.padEnd(30)}| Count |${'Time Achieved'.padStart(15)}\n`;
         const divideLine = `------------------------------|-------|---------------\n`;
         outputStr += divideLine;
