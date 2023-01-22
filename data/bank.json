@@ -1,6 +1,6 @@
 {
     "vault": 1000000000000,
     "loans": {},
-    "user_ledger": {},
-    "audit_log": {}
+    "userLedger": {},
+    "auditLog": {}
 }
