@@ -19,8 +19,8 @@ const client = new Client({ intents: [
   Intents.FLAGS.GUILD_VOICE_STATES,
   // Intents.FLAGS.GUILD_PRESENCES,
   Intents.FLAGS.GUILD_MESSAGES,
-  // Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-  // Intents.FLAGS.GUILD_MESSAGE_TYPING,
+  Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+  Intents.FLAGS.GUILD_MESSAGE_TYPING,
   Intents.FLAGS.DIRECT_MESSAGES,
   Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
   Intents.FLAGS.DIRECT_MESSAGE_TYPING
@@ -31,9 +31,19 @@ partials: [
 client.commands = new Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const bankCommandFiles = fs.readdirSync('./commands/bank').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
+  client.commands.set(command.data.name, command);
+  if (command.aliases) {
+    for (let alias of command.aliases) {
+      client.commands.set(alias, command);
+    }
+  }
+}
+for (const file of bankCommandFiles) {
+  const command = require(`./commands/bank/${file}`);
   client.commands.set(command.data.name, command);
   if (command.aliases) {
     for (let alias of command.aliases) {
