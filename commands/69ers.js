@@ -12,6 +12,8 @@ module.exports = {
         type: 'text'
     },
 	async execute(message) {
+        // TODO: make chart optional with -c (or no chart optional with -nc)
+        // TODO: allow for input of max 69ers to display up to max of 30 (good for looking at the chart)
         const guildId = message.guildId;
 
         logger.log(`!69ERS user: ${message.member.user.username} | guildId: ${guildId}`);
@@ -56,10 +58,10 @@ module.exports = {
             const d = new Date(timestamp);
             if (d > latestDate) {
                 latestDate = d;
-                latest69er =  user.username;
+                latest69er = user.username;
             }
-            const timeAchievedStr = getDateTimeStringLocal(d).padStart(15);
-            outputStr += `${usernameStr}| ${earnedStr} | ${timeAchievedStr}\n`;
+            const timeAchievedStr = getDateTimeStringLocal(d, false).padStart(15);
+            outputStr += `${usernameStr}| ${earnedStr} |${timeAchievedStr}\n`;
 
             // push chart variables
             // chartLabels.push(user.username.replaceAll(' ', ''));
@@ -67,7 +69,7 @@ module.exports = {
         }
 
         outputStr += divideLine;
-        outputStr += `${'Total'.padEnd(30)}| ${`${total69s}`.padStart(5)} | Last 69: ${latest69er} - ${getDateTimeStringLocal(latestDate).padStart(15)}`;
+        outputStr += `${'Total'.padEnd(30)}| ${`${total69s}`.padStart(5)} | Last 69: ${latest69er} -${getDateTimeStringLocal(latestDate, false).padStart(15)}`;
         outputStr += '```';
 
         const chart = {
