@@ -17,14 +17,13 @@ module.exports = {
         let userId = message.member.user.id;
         let userName = message.member.user.username;
         let timestampString = getDateTimeStringLocal();
-        if (!bankData.user_ledger[userId]) {
-            bankData.audit_log[timestampString] = `${userName} has requested their balance, but has no Cullivery account.`;
+        if (!bankData.userLedger[userId]) {
+            bankData.auditLog[timestampString] = `${userName} has requested their balance, but has no Cullivery account.`;
             outputStr = `You don't have a balance because you don't have a Cullivery account!\n` +
                 `Type "!claim" to open a Cullivery account.`;
-        }
-        else {
-            let userBalance = bankData.user_ledger[userId].balance;
-            bankData.audit_log[timestampString] = `${userName} has requested their balance: ${userBalance}`;
+        } else {
+            let userBalance = bankData.userLedger[userId].balance;
+            bankData.auditLog[timestampString] = `${userName} has requested their balance: ${userBalance}`;
             outputStr = `You have ${userBalance} Culliverys in your Cullivery account.`;
         }
 

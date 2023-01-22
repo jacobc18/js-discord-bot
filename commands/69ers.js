@@ -1,4 +1,5 @@
 const { getUsers: apiGetUsers } = require('../services/pastramiApi');
+const getDateTimeStringLocal = require('../utils/getDateTimeStringLocal');
 
 const logger = require('../utils/logger');
 
@@ -58,7 +59,7 @@ module.exports = {
                 latestDate = d;
                 latest69er =  user.username;
             }
-            const timeAchievedStr = getDateTimeStringUTC(d).padStart(15);
+            const timeAchievedStr = getDateTimeStringLocal(d).padStart(15);
             outputStr += `${usernameStr}| ${earnedStr} |${timeAchievedStr}\n`;
 
             // push chart variables
@@ -67,7 +68,7 @@ module.exports = {
         }
 
         outputStr += divideLine;
-        outputStr += `${'Total'.padEnd(30)}| ${`${total69s}`.padStart(5)} | Last 69: ${latest69er} -${getDateTimeStringUTC(latestDate).padStart(15)}`;
+        outputStr += `${'Total'.padEnd(30)}| ${`${total69s}`.padStart(5)} | Last 69: ${latest69er} -${getDateTimeStringLocal(latestDate).padStart(15)}`;
         outputStr += '```';
 
         const chart = {
@@ -90,13 +91,4 @@ module.exports = {
 	}
 };
 
-const getDateTimeStringUTC = (d = new Date()) => {
-    const dateInfoUTC = {
-        month: d.getUTCMonth() + 1 < 10 ? '0' + (d.getUTCMonth() + 1) : d.getUTCMonth() + 1,
-        date: d.getUTCDate() < 10 ? '0' + d.getUTCDate() : d.getUTCDate(),
-        year: `${d.getUTCFullYear()}`.substring(2),
-        hours: d.getUTCHours() < 10 ? '0' + d.getUTCHours() : d.getUTCHours(),
-        minutes: d.getUTCMinutes() < 10 ? '0' + d.getUTCMinutes() : d.getUTCMinutes()
-    };
-    return `${dateInfoUTC.month}/${dateInfoUTC.date}/${dateInfoUTC.year} ${dateInfoUTC.hours}:${dateInfoUTC.minutes}`;
-};
+
