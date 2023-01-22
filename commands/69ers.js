@@ -30,7 +30,7 @@ module.exports = {
             }
 
             return bEarned - aEarned;
-        }).slice(0, MAX_USERS_TO_DISPLAY);
+        });
 
         // don't use labels
         // const chartLabels = [];
@@ -38,6 +38,8 @@ module.exports = {
         let total69s = 0;
         let latestDate = new Date(1); // epoch
         let latest69er = '';
+        const sixtyNinersArrayMax = sixtyNinersArray.length > MAX_USERS_TO_DISPLAY ? MAX_USERS_TO_DISPLAY : sixtyNinersArray.length;
+        const isMaxedOut = sixtyNinersArrayMax === MAX_USERS_TO_DISPLAY;
 
         let outputStr = '```Top ' + MAX_USERS_TO_DISPLAY + ' 69ers:\n';
         outputStr += `${'Name'.padEnd(30)}| Count |${'Time Achieved'.padStart(15)}\n`;
@@ -61,11 +63,18 @@ module.exports = {
                 latest69er = user.username;
             }
             const timeAchievedStr = getDateTimeStringLocal(d, false).padStart(15);
-            outputStr += `${usernameStr}| ${earnedStr} |${timeAchievedStr}\n`;
+            if (i < sixtyNinersArrayMax) {
+                // only display user if in the top MAX_USERS_TO_DISPLAY to avoid going over Discord message length limit
+                outputStr += `${usernameStr}| ${earnedStr} |${timeAchievedStr}\n`;
+            }
 
             // push chart variables
             // chartLabels.push(user.username.replaceAll(' ', ''));
             chartData.push(`${earned}`);
+        }
+
+        if (isMaxedOut) {
+            outputStr += 'and more...'.padEnd(30) + '|       |\n';
         }
 
         outputStr += divideLine;
