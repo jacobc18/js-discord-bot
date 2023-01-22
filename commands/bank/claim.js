@@ -1,4 +1,5 @@
 const logger = require('../../utils/logger');
+const { DAY_MS } = require('../../utils/constants');
 const getDateTimeStringLocal = require('../../utils/getDateTimeStringLocal');
 const getCooldownTimeRemainingString = require('../../utils/getCooldownTimeRemainingString');
 const fs = require('fs');
@@ -32,14 +33,14 @@ module.exports = {
             outputStr = `Thanks for using Pastrami\'s Global Bank of Culliverys!\n` +
                 `I've added you to the ledger and dropped 30,000 Culliverys into your account!\n` +
                 `You may claim an allowance every 24 hours.`;
-        } else if (timestamp >= bankData.userLedger[userId].last_claim_timestamp + 86400000) {
+        } else if (timestamp >= bankData.userLedger[userId].last_claim_timestamp + DAY_MS) {
             // else, check if user has claimed allowance in the last 24 hrs. Give them 10k if they can claim
             bankData.vault -= 10000;
             bankData.userLedger[userId].balance += 10000;
             bankData.userLedger[userId].last_claim_timestamp = timestamp;
             bankData.auditLog[timestampString] = `${userName} claimed a 10k allowance.`;
             outputStr = `10,000 Culliverys has been added to your balance.\n` +
-                `You may claim another allowance no sooner than ${getDateTimeStringLocal(new Date(timestamp + 86400000))}`;
+                `You may claim another allowance no sooner than ${getDateTimeStringLocal(new Date(timestamp + DAY_MS))}`;
         } else {
             // otherwise, do nothing
             let cdTimeRemaining = getCooldownTimeRemainingString(timestamp, bankData.userLedger[userId].last_claim_timestamp);

@@ -1,6 +1,5 @@
 const logger = require('../utils/logger');
-
-const BOT_OWNER_ID = '189181051216592896';
+const { BOT_OWNER_ID } = require('../utils/constants');
 
 module.exports = {
   data: {

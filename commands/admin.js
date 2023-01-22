@@ -2,14 +2,13 @@ const {
   greetingsAdd,
   greetingsDelete
 } = require('./admin/greetings');
+const { BOT_OWNER_ID } = require('../utils/constants');
 const {
   banUserByDiscordId,
   unbanUserByDiscordId
 } = require('./admin/ban');
 
 const logger = require('../utils/logger');
-
-const BOT_OWNER_ID = '189181051216592896';
 
 module.exports = {
   data: {

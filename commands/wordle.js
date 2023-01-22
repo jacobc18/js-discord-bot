@@ -5,6 +5,7 @@ const fs = require('fs');
 const { MessageEmbed } = require('discord.js');
 const users = require('../data/users.json');
 const readFile = require('../utils/readFile');
+const { DAY_MS } = require('../utils/constants');
 const logger = require('../utils/logger');
 
 const USERS_FILEPATH_FROM_INDEX = './data/users.json';
@@ -26,7 +27,6 @@ const MAX_GUESSES_ALLOWED = 6;
 
 const FIRST_WORDLE_DATE = '2021-06-18';
 const BETA_START_DATE = '2022-01-20';
-const DAY_MS = 86400000;
 
 module.exports = {
   data: {
@@ -35,11 +35,8 @@ module.exports = {
   },
   aliases: ['w'],
   async execute(message, args) {
-    // const BOT_OWNER = '189181051216592896';
-    // if (message.author.id !== BOT_OWNER) {
-    //   await message.channel.send('Pastrami beta Wordle is down right now while some bugs are being worked on. Please try again later! <3');
-    //   return;
-    // }
+    await message.channel.send('Pastrami Wordle has been disabled.');
+    return;
 
     if (!isProduction) {
       await message.channel.send('Pastrami beta Wordle has been disabled. You can play full release Pastrami Wordle in the Jake Feeds Poros discord server.');

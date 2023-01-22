@@ -21,6 +21,7 @@ const constructSongObj = require('../utils/constructSongObj');
 const handleSubscription = require('../utils/handleSubscription');
 const deleteMusicPlayerIfNeeded = require('../utils/deleteMusicPlayerIfNeeded');
 const shuffleArray = require('../utils/shuffleArray');
+const { DAY_S, HOUR_S } = require('../utils/constants');
 const logger = require('../utils/logger');
 
 const youtube = new Youtube(process.env.YOUTUBE_API_KEY);
@@ -65,6 +66,7 @@ module.exports = {
 
         await interaction.channel.send(`\`${query}\``);
 
+        //TODO: do this different to handle multiple flags (-s, -shuffle, -l, -list)
         const querySplit = query.split(' ');
         const shuffleFlag = querySplit[querySplit.length - 1] === '-s' || querySplit[querySplit.length - 1] === '-shuffle'
 
@@ -355,13 +357,11 @@ const concatTrackDetails = ({name, artists = []}) => {
 };
 
 const createRawYTVideoDuration = (ytsDuration) => {
-    const secsInADay = 86400;
-    const secsInAnHour = 3600;
     let ytsSeconds = ytsDuration.seconds;
-    const days = Math.floor(ytsSeconds / secsInADay);
-    ytsSeconds %= secsInADay;
-    const hours = Math.floor(ytsSeconds / secsInAnHour);
-    ytsSeconds %= secsInAnHour;
+    const days = Math.floor(ytsSeconds / DAY_S);
+    ytsSeconds %= DAY_S;
+    const hours = Math.floor(ytsSeconds / HOUR_S);
+    ytsSeconds %= HOUR_S;
     const minutes = Math.floor(ytsSeconds / 60);
     ytsSeconds %= 60;
     const seconds = ytsSeconds;
