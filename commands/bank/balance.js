@@ -1,5 +1,6 @@
 const logger = require('../../utils/logger');
 const getDateTimeStringLocal = require('../../utils/getDateTimeStringLocal');
+const fs = require('fs');
 
 module.exports = {
     data: {
@@ -27,6 +28,8 @@ module.exports = {
             outputStr = `You have ${userBalance} Culliverys in your Cullivery account.`;
         }
 
+        fs.writeFileSync('./data/bank.json', JSON.stringify(bankData, null, 4));
+        
         await message.channel.send(`${outputStr}`);
     }
 };

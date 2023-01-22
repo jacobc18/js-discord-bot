@@ -1,6 +1,6 @@
 const logger = require('../../utils/logger');
 const getDateTimeStringLocal = require('../../utils/getDateTimeStringLocal');
-const getCooldownTimeRemaining = require('../../utils/getCooldownTimeRemaining');
+const getCooldownTimeRemainingString = require('../../utils/getCooldownTimeRemainingString');
 const fs = require('fs');
 
 module.exports = {
@@ -44,7 +44,7 @@ module.exports = {
         }
         // otherwise, do nothing
         else {
-            let cdTimeRemaining = getCooldownTimeRemaining(timestamp, bankData.user_ledger[userId].last_claim_timestamp);
+            let cdTimeRemaining = getCooldownTimeRemainingString(timestamp, bankData.user_ledger[userId].last_claim_timestamp);
             bankData.audit_log[timestampString] = `${userName} attempted to claim an allowance ${cdTimeRemaining} before their cooldown.`;
             outputStr = `You can claim your next allowance in ${cdTimeRemaining}.`;
         }
