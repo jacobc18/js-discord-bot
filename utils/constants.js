@@ -1,11 +1,12 @@
+module.exports = {
+  // ADMIN
+  BOT_OWNER_ID: '189181051216592896', // Jeek
 
-// ADMIN
-export const BOT_OWNER_ID = '189181051216592896'; // Jeek
-
-// TIME
-export const DAY_S = 86400;
-export const DAY_MS = 86400000;
-export const HOUR_S = 3600;
-export const HOUR_MS = 3600000;
-export const MINUTE_MS = 60000;
-export const SECOND_MS = 1000;
+  // TIME
+  DAY_S    : 86400,
+  DAY_MS   : 86400000,
+  HOUR_S   : 3600,
+  HOUR_MS  : 3600000,
+  MINUTE_MS: 60000,
+  SECOND_MS: 1000,
+};
