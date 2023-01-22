@@ -60,7 +60,7 @@ module.exports = {
                 latest69er =  user.username;
             }
             const timeAchievedStr = getDateTimeStringLocal(d).padStart(15);
-            outputStr += `${usernameStr}| ${earnedStr} |${timeAchievedStr}\n`;
+            outputStr += `${usernameStr}| ${earnedStr} | ${timeAchievedStr}\n`;
 
             // push chart variables
             // chartLabels.push(user.username.replaceAll(' ', ''));
@@ -68,7 +68,7 @@ module.exports = {
         }
 
         outputStr += divideLine;
-        outputStr += `${'Total'.padEnd(30)}| ${`${total69s}`.padStart(5)} | Last 69: ${latest69er} -${getDateTimeStringLocal(latestDate).padStart(15)}`;
+        outputStr += `${'Total'.padEnd(30)}| ${`${total69s}`.padStart(5)} | Last 69: ${latest69er} - ${getDateTimeStringLocal(latestDate).padStart(15)}`;
         outputStr += '```';
 
         const chart = {
