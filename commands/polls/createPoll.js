@@ -51,8 +51,8 @@ const parseArgs = (args) => {
         outputStr = 'You must give Pastrami the Poll question with \'-p\'.';
         return [false, outputStr];
     } else {
+        let pollQuestion = '';
         let temp = args.match(/"[^"]*"/g);
-        let pollQuestion = ''
         if (!temp) {
             outputStr = 'No poll question found. You need to give Pastrami a poll quesiton in double-quotes after \'-p\'.\n' +
             'Example:\n' +
