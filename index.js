@@ -8,7 +8,6 @@ const bannedUserHandler = require('./handlers/bannedUserHandler');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
 const readCommandFiles = require('./utils/readCommandFiles');
 const { getIsUserBannedData } = require('./services/pastramiApi');
-const { exit } = require('process');
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
