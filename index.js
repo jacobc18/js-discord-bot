@@ -6,7 +6,9 @@ const { Client, Intents, Collection } = require('discord.js');
 const sendBotOwnerDM = require('./utils/sendBotOwnerDM');
 const bannedUserHandler = require('./handlers/bannedUserHandler');
 const voiceStateUpdateHandler = require('./handlers/voiceStateUpdateHandler');
+const readCommandFiles = require('./utils/readCommandFiles');
 const { getIsUserBannedData } = require('./services/pastramiApi');
+const { exit } = require('process');
 
 const client = new Client({ intents: [
   Intents.FLAGS.GUILDS,
@@ -30,20 +32,10 @@ partials: [
 ]});
 client.commands = new Collection();
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const bankCommandFiles = fs.readdirSync('./commands/bank').filter(file => file.endsWith('.js'));
+const commandFiles = readCommandFiles('./commands');
 
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  client.commands.set(command.data.name, command);
-  if (command.aliases) {
-    for (let alias of command.aliases) {
-      client.commands.set(alias, command);
-    }
-  }
-}
-for (const file of bankCommandFiles) {
-  const command = require(`./commands/bank/${file}`);
+  const command = require(`./${file}`);
   client.commands.set(command.data.name, command);
   if (command.aliases) {
     for (let alias of command.aliases) {
