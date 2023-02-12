@@ -1,7 +1,7 @@
 // returns array of admin discord ids
 const getAdminIds = () => {
-  // jeek
-  return ['189181051216592896'];
+  // jeek, steve
+  return ['189181051216592896', '190098635969658881'];
 };
 
 const getIsAdminId = (discordId) => {
