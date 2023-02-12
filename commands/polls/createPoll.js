@@ -15,7 +15,7 @@ module.exports = {
             await message.author.send('Here is your poll:\n' + outputStr + '\nDoes this look good?');
             await message.author.dmChannel.awaitMessages({
                 max: 1,
-                time: 180000,
+                time: 30000,
                 errors: ['time']
             }).then((response) => {
                 if (response.first().content.toUpperCase().startsWith('Y')) {
@@ -41,13 +41,15 @@ module.exports = {
 const parseArgs = (args) => {
     let outputStr = '';
     const argsList = args.split(' ');
-    if (argsList[1] == '-h') {
+    const firstArg = argsList[1].toLowerCase();
+    console.log(firstArg);
+    if (firstArg === '-h' || firstArg === '-help') {
         outputStr = 
         'Create a poll with !createPoll -p "Poll question here in quotes." -o Poll options here listed by number 1) x 2) y 3) ...\n' +
         'You may have up to 9 options. Here\'s an example:\n' +
         '!createPoll -p "What is your favorite type of sandwhich?" -o 1) taco style 2) hotdog style 3) sandwhich style\n';
         return [false, outputStr];
-    } else if (argsList[1] != '-p') {
+    } else if (firstArg !== '-p' && firstArg !== '-poll') {
         outputStr = 'You must give Pastrami the Poll question with \'-p\'.';
         return [false, outputStr];
     } else {
@@ -63,7 +65,9 @@ const parseArgs = (args) => {
         }
         outputStr = outputStr.concat(pollQuestion);
         let argsIdx = pollQuestion.split(' ').length + 2;
-        if (argsList[argsIdx] != '-o') {
+        let optionsArg = argsList[argsIdx].toLowerCase();
+        console.log(optionsArg);
+        if (optionsArg !== '-o' && optionsArg !== '-options') {
             outputStr = 
             'You need to give options with \'-o\' after your question.\n' +
             'Example:\n' +
@@ -73,7 +77,7 @@ const parseArgs = (args) => {
             argsIdx++;
         }
 
-        if (argsList[argsIdx] != '1)') {
+        if (argsList[argsIdx] !== '1)') {
             outputStr = 
             'Improperly numbered poll options. You need to give Pastrami numbered poll options after \'-o\'.\n' +
             'Example:\n' +
@@ -83,12 +87,12 @@ const parseArgs = (args) => {
             outputStr = outputStr.concat('\n');
         }
         for (let i = 1; argsIdx < argsList.length && i < 9; argsIdx++) {
-            if (argsList[argsIdx] == (i + ')')) {
+            if (argsList[argsIdx] === (i + ')')) {
                 outputStr = outputStr.concat('\n' + pollEmojis[i] + ' - ');
                 i++;
-                continue;
+            } else {
+                outputStr = outputStr.concat(argsList[argsIdx] + ' ');
             }
-            outputStr = outputStr.concat(argsList[argsIdx] + ' ');
         }
     }
 
