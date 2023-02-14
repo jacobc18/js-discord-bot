@@ -4,6 +4,7 @@ const PASTRAMI_SECRET = process.env.PASTRAMI_API_SECRET;
 const isProduction = NODE_ENV.includes('production');
 
 const fetch = require('node-fetch');
+const { errorHandler } = require('./errorHandler');
 const logger = require('../utils/logger');
 const { getIsAdminId } = require('../utils/adminHelpers');
 
@@ -22,7 +23,7 @@ const getUsers = async() => {
 
     return await response.json();
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
@@ -34,7 +35,7 @@ const getUser = async(discordId) => {
 
     return await response.json();
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
@@ -52,7 +53,7 @@ const tryGetUser = async(discordId) => {
 
     return apiUser;
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
@@ -143,7 +144,7 @@ const getUser69Check = async(discordId) => {
 
     return await response.json();
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
@@ -155,7 +156,7 @@ const getTotal69s = async() => {
 
     return await response.json();
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
@@ -170,7 +171,7 @@ const postNewUser = async(discordId) => {
 
     return await response.json();
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
@@ -182,7 +183,7 @@ const getGuild = async (guildDiscordId) => {
 
     return await response.json();
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
@@ -198,10 +199,23 @@ const putUserGreetings = async(discordId, greetingsObj) => {
         greetings: greetingsObj
       })
     });
+    console.log('SECRET');
+    console.log(PASTRAMI_SECRET);
 
-    return await response.json();
+    console.log('my response');
+    console.log(response);
+    console.log(Object.keys(response));
+    const jsonY = await response.json();
+    console.log('json');
+    console.log(jsonY);
+    console.log(Object.keys(jsonY));
+
+    // return await response.json();
+    return 1;
   } catch (err) {
-    logger.log(err);
+    console.log('this is my error');
+    console.log(err);
+    errorHandler(error);
   }
 };
 
@@ -220,7 +234,7 @@ const deleteUserGreetings = async(discordId, greetingsObj) => {
 
     return await response.json();
   } catch (err) {
-    logger.log(err);
+    errorHandler(error);
   }
 };
 
