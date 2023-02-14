@@ -18,13 +18,13 @@ module.exports = {
         let userName = message.member.user.username;
         let timestampString = getDateTimeStringLocal();
         if (!bankData.userLedger[userId]) {
-            bankData.auditLog[timestampString] = `${userName} has requested their balance, but has no Cullivery account.`;
-            outputStr = `You don't have a balance because you don't have a Cullivery account!\n` +
-                `Type "!claim" to open a Cullivery account.`;
+            bankData.auditLog[timestampString] = `${userName} has requested their balance, but has no Kolaveri account.`;
+            outputStr = `You don't have a balance because you don't have a Kolaveri account!\n` +
+                `Type "!claim" to open a Kolaveri account.`;
         } else {
             let userBalance = bankData.userLedger[userId].balance;
             bankData.auditLog[timestampString] = `${userName} has requested their balance: ${userBalance}`;
-            outputStr = `You have ${userBalance} Culliverys in your Cullivery account.`;
+            outputStr = `You have ${userBalance} Kolaveries in your Kolaveri account.`;
         }
 
         fs.writeFileSync('./data/bank.json', JSON.stringify(bankData, null, 4));

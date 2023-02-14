@@ -30,8 +30,8 @@ module.exports = {
             bankData.vault -= 30000;
             bankData.userLedger[userId] = newUserEntry;
             bankData.auditLog[timestampString] = `${userName} has requested an allowance for the first time.`;
-            outputStr = `Thanks for using Pastrami\'s Global Bank of Culliverys!\n` +
-                `I've added you to the ledger and dropped 30,000 Culliverys into your account!\n` +
+            outputStr = `Thanks for using Pastrami\'s Global Bank of Kolaveries!\n` +
+                `I've added you to the ledger and dropped 30,000 Kolaveries into your account!\n` +
                 `You may claim an allowance every 24 hours.`;
         } else if (timestamp >= bankData.userLedger[userId].last_claim_timestamp + DAY_MS) {
             // else, check if user has claimed allowance in the last 24 hrs. Give them 10k if they can claim
@@ -39,7 +39,7 @@ module.exports = {
             bankData.userLedger[userId].balance += 10000;
             bankData.userLedger[userId].last_claim_timestamp = timestamp;
             bankData.auditLog[timestampString] = `${userName} claimed a 10k allowance.`;
-            outputStr = `10,000 Culliverys has been added to your balance.\n` +
+            outputStr = `10,000 Kolaveries has been added to your balance.\n` +
                 `You may claim another allowance no sooner than ${getDateTimeStringLocal(new Date(timestamp + DAY_MS))}`;
         } else {
             // otherwise, do nothing
