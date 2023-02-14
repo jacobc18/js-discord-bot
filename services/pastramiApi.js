@@ -1,4 +1,6 @@
+require('../utils/getDotenv');
 const NODE_ENV = process.env.NODE_ENV;
+const PASTRAMI_SECRET = process.env.PASTRAMI_API_SECRET;
 const isProduction = NODE_ENV.includes('production');
 
 const fetch = require('node-fetch');
@@ -160,7 +162,10 @@ const getTotal69s = async() => {
 const postNewUser = async(discordId) => {
   try {
     const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
-      method: 'POST'
+      method: 'POST',
+      headers: {
+        'Authorization': PASTRAMI_SECRET,
+      },
     });
 
     return await response.json();
@@ -186,7 +191,8 @@ const putUserGreetings = async(discordId, greetingsObj) => {
     const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
       method: 'PUT',
       headers: {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'Authorization': PASTRAMI_SECRET,
       },
       body: JSON.stringify({
         greetings: greetingsObj
@@ -204,7 +210,8 @@ const deleteUserGreetings = async(discordId, greetingsObj) => {
     const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': PASTRAMI_SECRET,
       },
       body: JSON.stringify({
         greetings: greetingsObj
