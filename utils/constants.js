@@ -1,7 +1,6 @@
 module.exports = {
   // ADMIN
-  // BOT_OWNER_ID: '189181051216592896', // Jeek
-  BOT_OWNER_ID: '190098635969658881', // Steve
+  BOT_OWNER_ID: '189181051216592896', // Jeek
 
   // TIME
   DAY_S    : 86400,
