@@ -4,7 +4,7 @@ const fs = require('fs');
 
 module.exports = {
     data: {
-        name: 'balance',
+        name: 'balance_deprecated',
         type: 'text'
     },
     async execute(message) {
