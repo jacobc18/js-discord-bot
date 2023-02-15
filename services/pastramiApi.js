@@ -199,22 +199,9 @@ const putUserGreetings = async(discordId, greetingsObj) => {
         greetings: greetingsObj
       })
     });
-    console.log('SECRET');
-    console.log(PASTRAMI_SECRET);
 
-    console.log('my response');
-    console.log(response);
-    console.log(Object.keys(response));
-    const jsonY = await response.json();
-    console.log('json');
-    console.log(jsonY);
-    console.log(Object.keys(jsonY));
-
-    // return await response.json();
-    return 1;
+    return await response.json();
   } catch (err) {
-    console.log('this is my error');
-    console.log(err);
     errorHandler(error);
   }
 };
