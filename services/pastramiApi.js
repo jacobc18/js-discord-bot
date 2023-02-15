@@ -27,6 +27,8 @@ const getUsers = async() => {
   }
 };
 
+/* USERS */
+
 const getUser = async(discordId) => {
   try {
     const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
@@ -69,6 +71,98 @@ const getIsUserBannedData = async(discordId) => {
   return { banned: true, data: userBanData };
 };
 
+const getUser69Check = async(discordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/69check`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(error);
+  }
+};
+
+const getTotal69s = async() => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/69s`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(error);
+  }
+};
+
+const postNewUser = async(discordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': PASTRAMI_SECRET,
+      },
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(error);
+  }
+};
+
+const putUserGreetings = async(discordId, greetingsObj) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': PASTRAMI_SECRET,
+      },
+      body: JSON.stringify({
+        greetings: greetingsObj
+      })
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(error);
+  }
+};
+
+const deleteUserGreetings = async(discordId, greetingsObj) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': PASTRAMI_SECRET,
+      },
+      body: JSON.stringify({
+        greetings: greetingsObj
+      })
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(error);
+  }
+};
+
+/* GUILDS */
+
+const getGuild = async (guildDiscordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/guilds/${guildDiscordId}`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(error);
+  }
+};
+
+/* BANS */
 // TODO: implement banlist in db/api
 const banUser = async (discordId, reason) => {
   if (getIsAdminId(discordId)) {
@@ -133,95 +227,6 @@ const unbanUser = async (discordId) => {
     fs.writeFileSync('./data/banlist.json', JSON.stringify(banlist, null, 2));
 
     return { unbanned: true, discordId };
-  }
-};
-
-const getUser69Check = async(discordId) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/69check`, {
-      method: 'GET'
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const getTotal69s = async() => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/69s`, {
-      method: 'GET'
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const postNewUser = async(discordId) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': PASTRAMI_SECRET,
-      },
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const getGuild = async (guildDiscordId) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/guilds/${guildDiscordId}`, {
-      method: 'GET'
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const putUserGreetings = async(discordId, greetingsObj) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': PASTRAMI_SECRET,
-      },
-      body: JSON.stringify({
-        greetings: greetingsObj
-      })
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const deleteUserGreetings = async(discordId, greetingsObj) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': PASTRAMI_SECRET,
-      },
-      body: JSON.stringify({
-        greetings: greetingsObj
-      })
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
   }
 };
 
