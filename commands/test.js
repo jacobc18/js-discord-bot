@@ -7,16 +7,17 @@ module.exports = {
     type: 'text'
   },
   async execute(message, splitArgs) {
+    const client = message.client;
+    const guildId = message.guildId;
     const userId = message.author.id;
+    const username = message.member.user.username;
+
     if (userId !== BOT_OWNER_ID) {
       await message.channel.send('command is not available to you');
       return;
     }
 
-    const client = message.client;
-    const guildId = message.guildId;
-
-    logger.log(`!TEST user: ${message.member.user.username} | guildId: ${guildId}`);
+    logger.log(`!TEST user: ${username} | guildId: ${guildId}`);
 
     console.log('test code here');
 
