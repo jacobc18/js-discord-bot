@@ -20,7 +20,7 @@ module.exports = {
 
         const users = await apiGetUsers();
         const sixtyNinersArray = users.map(userData => {
-            return [userData.discordId, userData.sixtyNineData];
+            return [userData.discordId, userData.sixtyNineData || { earned: -1 }];
         }).sort((a, b) => {
             const aEarned = a[1].earned;
             const bEarned = b[1].earned;
