@@ -275,6 +275,31 @@ const getUserTransactions = async (discordId, limit) => {
   }
 };
 
+/* CLAIMS */
+
+const makeAllUserClaims = async (discordId) => {
+  try {
+    if (!discordId || !isDiscordId(discordId)) return { error: `invalid discordId: ${discordId}` };
+    const response = await fetch(
+      `${PASTRAMI_API_ENDPOINT}/claim/all`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...authHeaderObj
+        },
+        body: JSON.stringify({
+          discordId
+        }),
+      });
+
+    const result = await response.json();
+
+    return result;
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
 
 module.exports = {
   getUsers,
@@ -291,4 +316,5 @@ module.exports = {
   deleteUserGreetings,
   getUserPositions,
   getUserTransactions,
+  makeAllUserClaims,
 }

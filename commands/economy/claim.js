@@ -1,17 +1,16 @@
 const logger = require('../../utils/logger');
 const { BOT_OWNER_ID } = require('../../utils/constants');
 const {
-  getUserPositions
+  makeAllUserClaims
 } = require('../../services/pastramiApi');
 const { buildTextGrid } = require('../../utils/textGrid');
 const getDateTimeStringLocal = require('../../utils/getDateTimeStringLocal');
 
 module.exports = {
   data: {
-    name: 'balance',
+    name: 'claim',
     type: 'text'
   },
-  aliases: ['balances', 'position', 'positions', 'bank', 'wallet'],
   async execute(message, splitArgs) {
     const guildId = message.guildId;
     const userId = message.author.id;
@@ -22,17 +21,20 @@ module.exports = {
       return;
     }
 
-    logger.log(`!BALANCE user: ${username} | guildId: ${guildId}`);
+    logger.log(`!CLAIM user: ${username} | guildId: ${guildId}`);
 
-    const ticker = splitArgs.length > 0 && splitArgs[0] !== 'all' && splitArgs[0];
+    const userClaimsResults = await makeAllUserClaims(userId);
 
-    const userPositionsResult = await getUserPositions(userId, { ticker });
-
-    if (userPositionsResult.error) {
-      await message.channel.send(`An error occurred while gathering your positions data: \`${userPositionsResult.error}\``);
+    if (userClaimsResults.error) {
+      await message.channel.send(`An error occurred while gathering your claim(s) data: \`${userClaimsResults.error}\``);
       return;
     }
+    
+    const flatClaimsResults = userClaimsResults.map(({ allowance, result }) => {
+      return { ...allowance, ...result };
+    });
 
+    const reasonWidth = 30;
     const columnDefs = [
       {
         title: 'Ticker',
@@ -46,24 +48,33 @@ module.exports = {
         width: 20
       },
       {
-        title: 'Currency Name',
-        key: 'currencyName',
-        width: 25
+        title: 'Claimed?',
+        key: 'success',
+        width: 10
       },
       {
-        title: 'Last Updated',
-        key: 'last_updated',
+        title: 'Reason',
+        key: 'reason',
+        width: reasonWidth,
+        process: (v) => {
+          if (!v) return '';
+          return v.length >= reasonWidth ? v.substring(26) + '...' : v;
+        },
+      },
+      {
+        title: 'Eligible Again',
+        key: 'cooldownEnds',
         width: 20,
         process: (v) => {
-          if (!Date.parse(v)) return v;
+          if (!Date.parse(v)) return v ?? '';
           return getDateTimeStringLocal(new Date(v));
         }
       }
     ];
 
-    userPositionsResult.unshift({ divide: true });
+    flatClaimsResults.unshift({ divide: true });
 
-    const textGrid = buildTextGrid(columnDefs, userPositionsResult, 'Your Positions:');
+    const textGrid = buildTextGrid(columnDefs, flatClaimsResults, 'Claim Results:');
 
     await message.channel.send(textGrid);
   }
