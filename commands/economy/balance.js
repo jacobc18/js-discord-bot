@@ -13,7 +13,6 @@ module.exports = {
   },
   aliases: ['balances', 'position', 'positions', 'bank', 'wallet'],
   async execute(message, splitArgs) {
-    const client = message.client;
     const guildId = message.guildId;
     const userId = message.author.id;
     const username = message.member.user.username;
