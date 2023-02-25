@@ -5,8 +5,12 @@ const isProduction = NODE_ENV.includes('production');
 
 const fetch = require('node-fetch');
 const { errorHandler } = require('./errorHandler');
-const logger = require('../utils/logger');
+const { isDiscordId } = require('../utils/regexHelpers');
 const { getIsAdminId } = require('../utils/adminHelpers');
+
+const authHeaderObj = {
+  'Authorization': PASTRAMI_SECRET,
+};
 
 // banning related imports... TODO: handle in DB/API instead of JSON file
 const fs = require('fs');
@@ -23,9 +27,11 @@ const getUsers = async() => {
 
     return await response.json();
   } catch (err) {
-    errorHandler(error);
+    errorHandler(err);
   }
 };
+
+/* USERS */
 
 const getUser = async(discordId) => {
   try {
@@ -35,7 +41,7 @@ const getUser = async(discordId) => {
 
     return await response.json();
   } catch (err) {
-    errorHandler(error);
+    errorHandler(err);
   }
 };
 
@@ -53,7 +59,7 @@ const tryGetUser = async(discordId) => {
 
     return apiUser;
   } catch (err) {
-    errorHandler(error);
+    errorHandler(err);
   }
 };
 
@@ -69,6 +75,96 @@ const getIsUserBannedData = async(discordId) => {
   return { banned: true, data: userBanData };
 };
 
+const getUser69Check = async(discordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/69check`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
+const getTotal69s = async() => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/69s`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
+const postNewUser = async(discordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
+      method: 'POST',
+      headers: authHeaderObj,
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
+const putUserGreetings = async(discordId, greetingsObj) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        ...authHeaderObj,
+      },
+      body: JSON.stringify({
+        greetings: greetingsObj
+      })
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
+const deleteUserGreetings = async(discordId, greetingsObj) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...authHeaderObj,
+      },
+      body: JSON.stringify({
+        greetings: greetingsObj
+      })
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
+/* GUILDS */
+
+const getGuild = async (guildDiscordId) => {
+  try {
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/guilds/${guildDiscordId}`, {
+      method: 'GET'
+    });
+
+    return await response.json();
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
+/* BANS */
 // TODO: implement banlist in db/api
 const banUser = async (discordId, reason) => {
   if (getIsAdminId(discordId)) {
@@ -136,94 +232,74 @@ const unbanUser = async (discordId) => {
   }
 };
 
-const getUser69Check = async(discordId) => {
+/* POSITIONS */
+
+const getUserPositions = async (discordId, { ticker }, enrichData = true) => {
   try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/69check`, {
-      method: 'GET'
+    if (!discordId || !isDiscordId(discordId)) return { error: `invalid discordId: ${discordId}` };
+    let queryParams = `?enrichData=${enrichData}`;
+    if (ticker && ticker !== 'all') queryParams += `&ticker=${ticker}`;
+    const response = await fetch(
+      `${PASTRAMI_API_ENDPOINT}/positions/${discordId}${queryParams}`, {
+        method: 'GET',
+        headers: authHeaderObj,
+      });
+
+    const result = await response.json();
+
+    return result;
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
+/* TRANSACTIONS */
+
+// limit: max number of transactions to query for
+const getUserTransactions = async (discordId, limit) => {
+  try {
+    if (!discordId || !isDiscordId(discordId))
+      return { error: `invalid discordId: ${discordId}` };
+    if (limit && typeof limit !== 'number') 
+      return { error: `invalid limit: ${limit}` };
+
+    const queryString = limit ? `?limit=${limit}` : '';
+    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/transactions/${discordId}${queryString}`, {
+      method: 'GET',
+      headers: authHeaderObj,
     });
 
     return await response.json();
   } catch (err) {
-    errorHandler(error);
+    errorHandler(err);
   }
 };
 
-const getTotal69s = async() => {
+/* CLAIMS */
+
+const makeAllUserClaims = async (discordId) => {
   try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/69s`, {
-      method: 'GET'
-    });
+    if (!discordId || !isDiscordId(discordId)) return { error: `invalid discordId: ${discordId}` };
+    const response = await fetch(
+      `${PASTRAMI_API_ENDPOINT}/claim/all`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...authHeaderObj
+        },
+        body: JSON.stringify({
+          discordId
+        }),
+      });
 
-    return await response.json();
+    const result = await response.json();
+
+    return result;
   } catch (err) {
-    errorHandler(error);
+    errorHandler(err);
   }
 };
 
-const postNewUser = async(discordId) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': PASTRAMI_SECRET,
-      },
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const getGuild = async (guildDiscordId) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/guilds/${guildDiscordId}`, {
-      method: 'GET'
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const putUserGreetings = async(discordId, greetingsObj) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': PASTRAMI_SECRET,
-      },
-      body: JSON.stringify({
-        greetings: greetingsObj
-      })
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
-
-const deleteUserGreetings = async(discordId, greetingsObj) => {
-  try {
-    const response = await fetch(`${PASTRAMI_API_ENDPOINT}/users/${discordId}/greetings`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': PASTRAMI_SECRET,
-      },
-      body: JSON.stringify({
-        greetings: greetingsObj
-      })
-    });
-
-    return await response.json();
-  } catch (err) {
-    errorHandler(error);
-  }
-};
 
 module.exports = {
   getUsers,
@@ -237,5 +313,8 @@ module.exports = {
   postNewUser,
   getGuild,
   putUserGreetings,
-  deleteUserGreetings
+  deleteUserGreetings,
+  getUserPositions,
+  getUserTransactions,
+  makeAllUserClaims,
 }

@@ -6,7 +6,7 @@ const fs = require('fs');
 
 module.exports = {
     data: {
-        name: 'claim',
+        name: 'claim_deprecated',
         type: 'text'
     },
 	async execute(message) {
