@@ -3,7 +3,7 @@ const joinArgsByQuotes = require('../../utils/joinArgsByQuotes');
 const {
   putUserGreetings,
   tryGetUser
-} = require('../../services/pastramiApi')
+} = require('../../services/pastramiApi');
 
 
 // args input should be treated as pairs of [key, value] after index 0 which should be the users discordId
