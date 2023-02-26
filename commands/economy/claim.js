@@ -16,11 +16,6 @@ module.exports = {
     const userId = message.author.id;
     const username = message.member.user.username;
 
-    if (userId !== BOT_OWNER_ID) {
-      await message.channel.send('command is not available to you');
-      return;
-    }
-
     logger.log(`!CLAIM user: ${username} | guildId: ${guildId}`);
 
     const userClaimsResults = await makeAllUserClaims(userId);
