@@ -1,5 +1,4 @@
 const logger = require('../../utils/logger');
-const { BOT_OWNER_ID } = require('../../utils/constants');
 const {
   makeAllUserClaims
 } = require('../../services/pastramiApi');

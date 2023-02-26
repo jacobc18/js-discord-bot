@@ -23,7 +23,7 @@ module.exports = {
     const mainCmd = args[0].toLowerCase();
 
     if (isDiscordId(mainCmd)) {
-      // inputn is user id or user tag
+      // input is user id or user tag
       const inputDiscordId = mainCmd.replace('<@', '').replace('>', '');
       await handleDisplayGreetings(message, inputDiscordId, client);
       return;
