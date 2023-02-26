@@ -275,6 +275,43 @@ const getUserTransactions = async (discordId, limit) => {
   }
 };
 
+const postTransaction = async ({
+  sourceDiscordId,
+  destinationDiscordId,
+  ticker,
+  amount,
+  comment, 
+}) => {
+  try {
+    if (!sourceDiscordId || !isDiscordId(sourceDiscordId)) return { error: `invalid sourceDiscordId: ${sourceDiscordId}` };
+    if (!destinationDiscordId || !isDiscordId(destinationDiscordId)) return { error: `invalid destinationDiscordId: ${destinationDiscordId}` };
+    if (!ticker) return { error: `invalid or misising ticker: ${ticker}` };
+    if (!amount || amount < 0) return { error: `invalid or misising amount: ${amount}, must be >= 1` };
+    if (comment && typeof comment !== 'string') return { error: `comment must be falsy value or string: ${comment}` };
+    const response = await fetch(
+      `${PASTRAMI_API_ENDPOINT}/transactions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...authHeaderObj
+        },
+        body: JSON.stringify({
+          sourceDiscordId,
+          destinationDiscordId,
+          ticker,
+          amount,
+          comment, 
+        }),
+      });
+
+    const result = await response.json();
+
+    return result;
+  } catch (err) {
+    errorHandler(err);
+  }
+};
+
 /* CLAIMS */
 
 const makeAllUserClaims = async (discordId) => {
@@ -316,5 +353,6 @@ module.exports = {
   deleteUserGreetings,
   getUserPositions,
   getUserTransactions,
+  postTransaction,
   makeAllUserClaims,
 }
