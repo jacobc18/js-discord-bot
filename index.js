@@ -33,12 +33,17 @@ client.commands = new Collection();
 
 const commandFiles = readCommandFiles('./commands');
 
+// TODO: implement handling sub commands with aliases
+//  ie: !casino c, !c chance, !c c, etc.
 for (const file of commandFiles) {
   const command = require(`./${file}`);
-  client.commands.set(command.data.name, command);
+  const parentCmdName = command.data?.parentCommand || '';
+  const cmdName = parentCmdName ? `${parentCmdName}/${command.data.name}` : command.data.name;
+  client.commands.set(cmdName, command);
   if (command.aliases) {
     for (let alias of command.aliases) {
-      client.commands.set(alias, command);
+      const aliasName = parentCmdName ? `${parentCmdName}/${alias}` : alias;
+      client.commands.set(aliasName, command);
     }
   }
 }
@@ -111,6 +116,7 @@ client.on('messageCreate', async message => {
 
   const splitArgs = message.content.split(' ');
   const command = splitArgs.shift().substring(1);
+  const subCmd = (splitArgs.length > 0 && splitArgs[0]);
 
   if (command === 'report') {
     await sendBotOwnerDM(client, `"${message.content}" FROM ${message.author.username} (${message.author.id})`);
@@ -118,7 +124,11 @@ client.on('messageCreate', async message => {
     return;
   }
 
-  if (client.commands.has(command)) {
+  if (subCmd && client.commands.has(`${command}/${subCmd}`)) {
+    // execute sub command
+    await client.commands.get(`${command}/${splitArgs.shift()}`).execute(message, splitArgs);
+  } else if (client.commands.has(command)) {
+    // execute main command
     await client.commands.get(command).execute(message, splitArgs);
   } else if (command === 'echo') {
     if (splitArgs.length > 0) {
